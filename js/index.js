@@ -6,15 +6,15 @@ canvas.width = 1024 * dpr;
 canvas.height = 576 * dpr;
 
 const layersData = {
-	l_New_Layer_1: l_New_Layer_1,
-	l_New_Layer_2: l_New_Layer_2,
-	l_Decorations: l_Decorations,
-	l_Background_tiles: l_Background_tiles,
-	l_Decor_top: l_Decor_top,
-	l_NPC: l_NPC,
-	l_Tiles: l_Tiles,
-	l_Collision: l_Collision,
-	l_Rewards: l_Rewards,
+	l_New_Layer_1,
+	l_New_Layer_2,
+	l_Decorations,
+	l_Background_tiles,
+	l_Decor_top,
+	l_NPC,
+	l_Tiles,
+	l_Collision,
+	l_Rewards,
 };
 
 const tilesets = {
@@ -117,7 +117,7 @@ const renderStaticLayers = async () => {
 const player = new Player({
 	x: 100,
 	y: 100,
-	size: 16,
+	size: 32,
 	velocity: { x: 0, y: 0 },
 });
 
@@ -166,9 +166,9 @@ function animate(backgroundCanvas) {
 	c.clearRect(0, 0, canvas.width, canvas.height);
 	c.drawImage(backgroundCanvas, 0, 0);
 	player.draw(c);
-	c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
-	c.fillRect(300, SCROLL_POST_TOP, 100, 10);
-	c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
+	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
+	// c.fillRect(300, SCROLL_POST_TOP, 100, 10);
+	// c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
 	c.restore();
 
 	requestAnimationFrame(() => animate(backgroundCanvas));
