@@ -49,6 +49,7 @@ class Player {
 			},
 		};
 		this.currentSprite = this.sprites.idle;
+		this.direction = "right";
 	}
 
 	draw(c) {
@@ -56,17 +57,26 @@ class Player {
 		// c.fillStyle = "rgba(255, 0, 0, 0.5)";
 		// c.fillRect(this.x, this.y, this.width, this.height);
 		if (this.isImageLoaded) {
+			let xScale = 1;
+			let x = this.x;
+			if (this.direction === "left") {
+				xScale = -1;
+				x = -this.x - this.width;
+			}
+			c.save();
+			c.scale(xScale, 1);
 			c.drawImage(
 				this.image,
 				this.currentSprite.x + this.currentSprite.width * this.currentFrame,
 				this.currentSprite.y,
 				this.currentSprite.width,
 				this.currentSprite.height,
-				this.x,
+				x,
 				this.y,
 				this.width,
 				this.height,
 			);
+			c.restore();
 		}
 	}
 
@@ -93,9 +103,14 @@ class Player {
 		// Update vertical position and check collisions
 		this.updateVerticalPosition(deltaTime);
 		this.checkForVerticalCollisions(collisionBlocks);
+		this.determineDirection();
+
 		this.switchSprites();
 	}
 
+	determineDirection() {
+		this.direction = this.velocity.x > 0 ? "right" : "left";
+	}
 	switchSprites() {
 		if (
 			this.isOnGround &&
