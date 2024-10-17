@@ -109,7 +109,12 @@ class Player {
 	}
 
 	determineDirection() {
-		this.direction = this.velocity.x > 0 ? "right" : "left";
+		//this.direction = this.velocity.x > 0 ? "right" : "left";
+		if (this.velocity.x > 0) {
+			this.direction = "right";
+		} else if (this.velocity.x < 0) {
+			this.direction = "left";
+		}
 	}
 	switchSprites() {
 		if (
