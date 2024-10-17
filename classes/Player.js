@@ -35,17 +35,17 @@ class Player {
 			},
 			jump: {
 				x: 0,
-				y: 32,
+				y: 32 * 5,
 				width: 33,
 				height: 32,
-				frames: 6,
+				frames: 1,
 			},
 			fall: {
-				x: 0,
-				y: 32,
+				x: 33,
+				y: 32 * 5,
 				width: 33,
 				height: 32,
-				frames: 2,
+				frames: 1,
 			},
 		};
 		this.currentSprite = this.sprites.idle;
@@ -113,6 +113,19 @@ class Player {
 			//running
 			this.currentFrame = 0;
 			this.currentSprite = this.sprites.run;
+		} else if (!this.isOnGround) {
+			//jump and fall
+			this.velocity.y < 0
+				? ((this.currentFrame = 0),
+				  (this.currentSprite =
+						this.currentSprite === this.sprites.jump
+							? this.currentSprite
+							: this.sprites.jump))
+				: ((this.currentFrame = 0),
+				  (this.currentSprite =
+						this.currentSprite === this.sprites.fall
+							? this.currentSprite
+							: this.sprites.fall));
 		}
 	}
 	jump() {
