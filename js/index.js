@@ -5,9 +5,9 @@ const dpr = window.devicePixelRatio || 1;
 canvas.width = 1024 * dpr;
 canvas.height = 576 * dpr;
 
+const OceanLayerData = { l_New_Layer_1 };
+const MountainLayerData = { l_New_Layer_2 };
 const layersData = {
-	l_New_Layer_1,
-	l_New_Layer_2,
 	l_Decorations,
 	l_Background_tiles,
 	l_Decor_top,
@@ -82,7 +82,7 @@ const renderLayer = (tilesData, tilesetImage, tileSize, context) => {
 	});
 };
 
-const renderStaticLayers = async () => {
+const renderStaticLayers = async (layersData) => {
 	const offscreenCanvas = document.createElement("canvas");
 	offscreenCanvas.width = canvas.width;
 	offscreenCanvas.height = canvas.height;
@@ -138,6 +138,8 @@ const camera = { x: 0, y: 0 };
 const SCROLL_POST_RIGHT = 330;
 const SCROLL_POST_TOP = 100;
 const SCROLL_POST_BOTTOM = 300;
+let oceanBackgroundCanvas = null;
+let mountainBackgroundCanvas = null;
 function animate(backgroundCanvas) {
 	// Calculate delta time
 	const currentTime = performance.now();
@@ -164,6 +166,8 @@ function animate(backgroundCanvas) {
 	c.scale(dpr, dpr);
 	c.translate(-camera.x, -camera.y);
 	c.clearRect(0, 0, canvas.width, canvas.height);
+	c.drawImage(oceanBackgroundCanvas, camera.x * 0.32, 0);
+	c.drawImage(mountainBackgroundCanvas, camera.x * 0.16, 0);
 	c.drawImage(backgroundCanvas, 0, 0);
 	player.draw(c);
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
@@ -176,7 +180,9 @@ function animate(backgroundCanvas) {
 
 const startRendering = async () => {
 	try {
-		const backgroundCanvas = await renderStaticLayers();
+		oceanBackgroundCanvas = await renderStaticLayers(OceanLayerData);
+		mountainBackgroundCanvas = await renderStaticLayers(MountainLayerData);
+		const backgroundCanvas = await renderStaticLayers(layersData);
 		if (!backgroundCanvas) {
 			console.error("Failed to create the background canvas");
 			return;
