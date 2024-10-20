@@ -120,6 +120,17 @@ const player = new Player({
 	size: 32,
 	velocity: { x: 0, y: 0 },
 });
+const opossum = new Opossum({
+	x: 490,
+	y: 100,
+	size: 32,
+});
+const opossum2 = new Opossum({
+	x: 700,
+	y: 100,
+	size: 32,
+	range: 100,
+});
 
 const keys = {
 	w: {
@@ -149,6 +160,10 @@ function animate(backgroundCanvas) {
 	// Update player position
 	player.handleInput(keys);
 	player.update(deltaTime, collisionBlocks);
+
+	// Update opossum
+	opossum.update(deltaTime, collisionBlocks);
+	opossum2.update(deltaTime, collisionBlocks);
 	if (player.x > SCROLL_POST_RIGHT && player.x < 1680) {
 		const scrollPostDistance = player.x - SCROLL_POST_RIGHT;
 		camera.x = scrollPostDistance;
@@ -170,6 +185,8 @@ function animate(backgroundCanvas) {
 	c.drawImage(mountainBackgroundCanvas, camera.x * 0.16, 0);
 	c.drawImage(backgroundCanvas, 0, 0);
 	player.draw(c);
+	opossum.draw(c);
+	opossum2.draw(c);
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
 	// c.fillRect(300, SCROLL_POST_TOP, 100, 10);
 	// c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
