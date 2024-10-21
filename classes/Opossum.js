@@ -6,14 +6,15 @@ class Opossum {
 	constructor({
 		x,
 		y,
-		size,
+		width,
+		height,
 		velocity = { x: OPOSSUM_X_VELOCITY, y: 0 },
 		range = 290,
 	}) {
 		this.x = x;
 		this.y = y;
-		this.width = size;
-		this.height = size;
+		this.width = width;
+		this.height = height;
 		this.velocity = velocity;
 		this.isOnGround = false;
 		this.isImageLoaded = false;
@@ -38,7 +39,7 @@ class Opossum {
 		this.hitBox = {
 			x: 0,
 			y: 0,
-			height: 23,
+			height: 19,
 			width: 30,
 		};
 		this.distanceTraveled = 0;
@@ -48,15 +49,15 @@ class Opossum {
 
 	draw(c) {
 		// Red square debug code
-		c.fillStyle = "rgba(255, 0, 0, 0.5)";
-		c.fillRect(this.x, this.y, this.width, this.height);
-		c.fillStyle = "rgba(0, 0, 255, 0.5)";
-		c.fillRect(
-			this.hitBox.x,
-			this.hitBox.y,
-			this.hitBox.width,
-			this.hitBox.height,
-		);
+		// c.fillStyle = "rgba(255, 0, 0, 0.5)";
+		// c.fillRect(this.x, this.y, this.width, this.height);
+		// c.fillStyle = "rgba(0, 0, 255, 0.5)";
+		// c.fillRect(
+		// 	this.hitBox.x,
+		// 	this.hitBox.y,
+		// 	this.hitBox.width,
+		// 	this.hitBox.height,
+		// );
 		if (this.isImageLoaded) {
 			let xScale = 1;
 			let x = this.x;
