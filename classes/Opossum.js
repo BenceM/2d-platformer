@@ -43,6 +43,7 @@ class Opossum {
 		};
 		this.distanceTraveled = 0;
 		this.range = range;
+		this.id = Math.floor(Math.random() * Math.random() * 1000) + 1;
 	}
 
 	draw(c) {

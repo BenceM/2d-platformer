@@ -121,17 +121,20 @@ const player = new Player({
 	velocity: { x: 0, y: 0 },
 });
 //make possum into an array for collision detection
-const opossum = new Opossum({
-	x: 490,
-	y: 100,
-	size: 32,
-});
-const opossum2 = new Opossum({
-	x: 700,
-	y: 100,
-	size: 32,
-	range: 100,
-});
+const opossums = [
+	new Opossum({
+		x: 490,
+		y: 100,
+		size: 32,
+	}),
+	new Opossum({
+		x: 700,
+		y: 100,
+		size: 32,
+		range: 100,
+	}),
+];
+
 const sprites = [];
 
 // new Sprite({
@@ -179,8 +182,10 @@ function animate(backgroundCanvas) {
 	player.update(deltaTime, collisionBlocks);
 
 	// Update opossum
-	opossum.update(deltaTime, collisionBlocks);
-	opossum2.update(deltaTime, collisionBlocks);
+	opossums
+		.reverse()
+		.map((opossum) => opossum.update(deltaTime, collisionBlocks));
+
 	//update sprites
 	sprites.reverse().map((sprite, i) => {
 		sprite.update(deltaTime);
@@ -189,27 +194,35 @@ function animate(backgroundCanvas) {
 		}
 	});
 
-	//jump on enemy
-	if (checkCollisions(player, opossum)) {
-		player.velocity.y = -200;
-		sprites.push(
-			new Sprite({
-				x: opossum.x,
-				y: opossum.y,
-				width: 28,
-				height: 26,
-				imgSrc: "enemy-death.png",
-				spriteAnimation: {
-					x: 0,
-					y: 0,
+	//Jump and remove opossums
+	//console.log(checkCollisions(player, opossums));
+
+	const opossumHitIndex = opossums.findIndex((opossum) => {
+		if (checkCollisions(player, opossum)) {
+			player.velocity.y = -200;
+			sprites.push(
+				new Sprite({
+					x: opossum.x,
+					y: opossum.y,
 					width: 28,
 					height: 26,
-					frames: 4,
-				},
-			}),
-		);
+					imgSrc: "enemy-death.png",
+					spriteAnimation: {
+						x: 0,
+						y: 0,
+						width: 28,
+						height: 26,
+						frames: 4,
+					},
+				}),
+			);
+			return opossum.id;
+		}
+	});
+	if (opossumHitIndex !== -1) {
+		opossums.splice(opossumHitIndex, 1);
 	}
-
+	//end
 	if (player.x > SCROLL_POST_RIGHT && player.x < 1680) {
 		const scrollPostDistance = player.x - SCROLL_POST_RIGHT;
 		camera.x = scrollPostDistance;
@@ -231,8 +244,8 @@ function animate(backgroundCanvas) {
 	c.drawImage(mountainBackgroundCanvas, camera.x * 0.16, 0);
 	c.drawImage(backgroundCanvas, 0, 0);
 	player.draw(c);
-	opossum.draw(c);
-	opossum2.draw(c);
+	opossums.reverse().map((opossum) => opossum.draw(c));
+
 	sprites.reverse().map((sprite) => sprite.draw(c));
 
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
