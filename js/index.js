@@ -120,6 +120,7 @@ const player = new Player({
 	size: 32,
 	velocity: { x: 0, y: 0 },
 });
+//make possum into an array for collision detection
 const opossum = new Opossum({
 	x: 490,
 	y: 100,
@@ -131,6 +132,22 @@ const opossum2 = new Opossum({
 	size: 32,
 	range: 100,
 });
+const sprites = [];
+
+// new Sprite({
+// 	x: 700,
+// 	y: 100,
+// 	width: 32,
+// 	height: 32,
+// 	imgSrc: "enemy-death.png",
+// 	spriteAnimation: {
+// 		x: 0,
+// 		y: 0,
+// 		width: 28,
+// 		height: 26,
+// 		frames: 4,
+// 	},
+// }),
 
 const keys = {
 	w: {
@@ -164,6 +181,35 @@ function animate(backgroundCanvas) {
 	// Update opossum
 	opossum.update(deltaTime, collisionBlocks);
 	opossum2.update(deltaTime, collisionBlocks);
+	//update sprites
+	sprites.reverse().map((sprite, i) => {
+		sprite.update(deltaTime);
+		if (sprite.iteration === sprite.lifetime) {
+			sprites.splice(i, 1);
+		}
+	});
+
+	//jump on enemy
+	if (checkCollisions(player, opossum)) {
+		player.velocity.y = -200;
+		sprites.push(
+			new Sprite({
+				x: opossum.x,
+				y: opossum.y,
+				width: 28,
+				height: 26,
+				imgSrc: "enemy-death.png",
+				spriteAnimation: {
+					x: 0,
+					y: 0,
+					width: 28,
+					height: 26,
+					frames: 4,
+				},
+			}),
+		);
+	}
+
 	if (player.x > SCROLL_POST_RIGHT && player.x < 1680) {
 		const scrollPostDistance = player.x - SCROLL_POST_RIGHT;
 		camera.x = scrollPostDistance;
@@ -187,6 +233,8 @@ function animate(backgroundCanvas) {
 	player.draw(c);
 	opossum.draw(c);
 	opossum2.draw(c);
+	sprites.reverse().map((sprite) => sprite.draw(c));
+
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
 	// c.fillRect(300, SCROLL_POST_TOP, 100, 10);
 	// c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
