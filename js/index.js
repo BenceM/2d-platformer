@@ -126,6 +126,7 @@ const opossums = [
 		x: 490,
 		y: 100,
 	}),
+
 	new Opossum({
 		x: 700,
 		y: 100,
@@ -215,7 +216,6 @@ function animate(backgroundCanvas) {
 	opossums.forEach((opossum, index) => {
 		const collisionDirection = checkCollisions(player, opossum);
 		if (collisionDirection) {
-			console.log(collisionDirection);
 			if (collisionDirection === "bottom" && player.velocity.y !== 0) {
 				player.velocity.y = -200;
 				sprites.push(
@@ -235,6 +235,8 @@ function animate(backgroundCanvas) {
 					}),
 				);
 				opossumToRemoveIndex = index;
+			} else if (collisionDirection !== "bottom") {
+				player.setIsInvincible();
 			}
 		}
 	});

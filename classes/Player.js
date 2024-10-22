@@ -56,6 +56,21 @@ class Player {
 			height: 23,
 			width: 20,
 		};
+		this.isInvincible = false;
+		this.isFlickering = false;
+	}
+	setIsInvincible() {
+		this.isInvincible = true;
+
+		const flickerInterval = setInterval(() => {
+			this.isFlickering = !this.isFlickering;
+		}, 200);
+
+		setTimeout(() => {
+			this.isInvincible = false;
+			clearInterval(flickerInterval);
+			this.isFlickering = false;
+		}, 1500);
 	}
 
 	draw(c) {
@@ -77,6 +92,11 @@ class Player {
 				x = -this.x - this.width;
 			}
 			c.save();
+			if (this.isInvincible && this.isFlickering) {
+				c.globalAlpha = 0.5;
+			} else {
+				c.globalAlpha = 1;
+			}
 			c.scale(xScale, 1);
 			c.drawImage(
 				this.image,
