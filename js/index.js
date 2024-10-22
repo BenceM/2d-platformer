@@ -125,35 +125,25 @@ const opossums = [
 	new Opossum({
 		x: 490,
 		y: 100,
-		width: 36,
-		height: 28,
 	}),
 	new Opossum({
 		x: 700,
 		y: 100,
-		width: 36,
-		height: 28,
 		range: 100,
 	}),
 	new Opossum({
 		x: 950,
 		y: 100,
-		width: 36,
-		height: 28,
 		range: 95,
 	}),
 	new Opossum({
 		x: 1150,
 		y: 10,
-		width: 36,
-		height: 28,
 		range: 60,
 	}),
 	new Opossum({
 		x: 1200,
 		y: 200,
-		width: 36,
-		height: 28,
 		range: 93,
 	}),
 ];
@@ -220,30 +210,36 @@ function animate(backgroundCanvas) {
 	//Jump and remove opossums
 	//console.log(checkCollisions(player, opossums));
 
-	const opossumHitIndex = opossums.findIndex((opossum) => {
-		if (checkCollisions(player, opossum)) {
-			player.velocity.y = -200;
-			sprites.push(
-				new Sprite({
-					x: opossum.x,
-					y: opossum.y,
-					width: 28,
-					height: 26,
-					imgSrc: "enemy-death.png",
-					spriteAnimation: {
-						x: 0,
-						y: 0,
+	let opossumToRemoveIndex = null;
+
+	opossums.forEach((opossum, index) => {
+		const collisionDirection = checkCollisions(player, opossum);
+		if (collisionDirection) {
+			console.log(collisionDirection);
+			if (collisionDirection === "bottom" && player.velocity.y !== 0) {
+				player.velocity.y = -200;
+				sprites.push(
+					new Sprite({
+						x: opossum.x,
+						y: opossum.y,
 						width: 28,
 						height: 26,
-						frames: 4,
-					},
-				}),
-			);
-			return opossum.id;
+						imgSrc: "enemy-death.png",
+						spriteAnimation: {
+							x: 0,
+							y: 0,
+							width: 28,
+							height: 26,
+							frames: 4,
+						},
+					}),
+				);
+				opossumToRemoveIndex = index;
+			}
 		}
 	});
-	if (opossumHitIndex !== -1) {
-		opossums.splice(opossumHitIndex, 1);
+	if (opossumToRemoveIndex !== null) {
+		opossums.splice(opossumToRemoveIndex, 1);
 	}
 	//end
 	if (player.x > SCROLL_POST_RIGHT && player.x < 1680) {

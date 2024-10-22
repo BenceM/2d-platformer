@@ -6,8 +6,8 @@ class Opossum {
 	constructor({
 		x,
 		y,
-		width,
-		height,
+		width = 36,
+		height = 28,
 		velocity = { x: OPOSSUM_X_VELOCITY, y: 0 },
 		range = 290,
 	}) {
