@@ -150,6 +150,50 @@ const opossums = [
 ];
 
 const sprites = [];
+const hearts = [
+	new Heart({
+		x: 10,
+		y: 10,
+		width: 21,
+		height: 18,
+		imgSrc: "hearts.png",
+		spriteAnimation: {
+			x: 0,
+			y: 0,
+			width: 21,
+			height: 18,
+			frames: 4,
+		},
+	}),
+	new Heart({
+		x: 33,
+		y: 10,
+		width: 21,
+		height: 18,
+		imgSrc: "hearts.png",
+		spriteAnimation: {
+			x: 0,
+			y: 0,
+			width: 21,
+			height: 18,
+			frames: 4,
+		},
+	}),
+	new Heart({
+		x: 56,
+		y: 10,
+		width: 21,
+		height: 18,
+		imgSrc: "hearts.png",
+		spriteAnimation: {
+			x: 0,
+			y: 0,
+			width: 21,
+			height: 18,
+			frames: 4,
+		},
+	}),
+];
 
 // new Sprite({
 // 	x: 700,
@@ -268,6 +312,7 @@ function animate(backgroundCanvas) {
 	opossums.reverse().map((opossum) => opossum.draw(c));
 
 	sprites.reverse().map((sprite) => sprite.draw(c));
+	hearts.reverse().map((heart) => heart.draw(c));
 
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
 	// c.fillRect(300, SCROLL_POST_TOP, 100, 10);
