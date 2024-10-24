@@ -8,16 +8,17 @@ canvas.height = 576 * dpr;
 const OceanLayerData = { l_New_Layer_1 };
 const MountainLayerData = { l_New_Layer_2 };
 const layersData = {
+	l_Collision,
 	l_Decorations,
 	l_Background_tiles,
 	l_Decor_top,
 	l_NPC,
 	l_Tiles,
-	l_Collision,
 	l_Rewards,
 };
 
 const tilesets = {
+	l_Collision: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_New_Layer_1: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_New_Layer_2: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Decorations: { imageUrl: "./images/decorations.png", tileSize: 16 },
@@ -25,15 +26,41 @@ const tilesets = {
 	l_Decor_top: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_NPC: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Tiles: { imageUrl: "./images/tileset.png", tileSize: 16 },
-	l_Collision: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Rewards: { imageUrl: "./images/decorations.png", tileSize: 16 },
 };
 
 // Tile setup
+
 const collisionBlocks = [];
 const platforms = [];
 const blockSize = 16; // Assuming each tile is 16x16 pixels
-
+async function collisionsInit() {
+	const collisionBlocks = [];
+	const platforms = [];
+	const blockSize = 16;
+	collisions.forEach((row, y) => {
+		row.forEach((symbol, x) => {
+			if (symbol === 1) {
+				collisionBlocks.push(
+					new CollisionBlock({
+						x: x * blockSize,
+						y: y * blockSize,
+						size: blockSize,
+					}),
+				);
+			} else if (symbol === 2) {
+				platforms.push(
+					new Platform({
+						x: x * blockSize,
+						y: y * blockSize + blockSize,
+						width: 16,
+						height: 4,
+					}),
+				);
+			}
+		});
+	});
+}
 collisions.forEach((row, y) => {
 	row.forEach((symbol, x) => {
 		if (symbol === 1) {
@@ -112,6 +139,15 @@ const renderStaticLayers = async (layersData) => {
 	return offscreenCanvas;
 };
 // END - Tile setup
+//game over function
+function showGameOverPopup() {
+	document.getElementById("gameOverPopup").classList.remove("display-none");
+	document.getElementById("gameOverPopup").classList.add("display-flex");
+
+	gamePaused = true;
+}
+let gamePaused = false;
+//end
 
 let player = new Player({
 	x: 100,
@@ -223,12 +259,15 @@ const keys = {
 
 let lastTime = performance.now();
 let camera = { x: 0, y: 0 };
+
 const SCROLL_POST_RIGHT = 330;
 const SCROLL_POST_TOP = 100;
 const SCROLL_POST_BOTTOM = 300;
 let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
-function init() {
+async function init() {
+	camera = { x: 0, y: 0 };
+
 	player = new Player({
 		x: 100,
 		y: 100,
@@ -309,9 +348,14 @@ function init() {
 			},
 		}),
 	];
-	camera = { x: 0, y: 0 };
+	gamePaused = false;
 }
 function animate(backgroundCanvas) {
+	//
+	// if (gamePaused) {
+	// 	requestAnimationFrame(() => animate(backgroundCanvas)); // Continue to call animate to keep rendering the pause screen if needed
+	// 	return; // Stop further execution of this function
+	// } else {}
 	// Calculate delta time
 	const currentTime = performance.now();
 	const deltaTime = (currentTime - lastTime) / 1000;
@@ -366,6 +410,8 @@ function animate(backgroundCanvas) {
 				if (!player.isInvincible && fullHearts.length > 0) {
 					fullHearts.at(-1).depleted = true;
 					player.setIsInvincible();
+				} else if (fullHearts.length === 0) {
+					showGameOverPopup();
 				}
 			}
 		}
@@ -419,7 +465,6 @@ const startRendering = async () => {
 			console.error("Failed to create the background canvas");
 			return;
 		}
-
 		animate(backgroundCanvas);
 	} catch (error) {
 		console.error("Error during rendering:", error);

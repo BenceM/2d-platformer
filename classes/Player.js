@@ -58,6 +58,7 @@ class Player {
 		};
 		this.isInvincible = false;
 		this.isFlickering = false;
+		this.isDead = false;
 	}
 	setIsInvincible() {
 		this.isInvincible = true;
@@ -114,7 +115,7 @@ class Player {
 	}
 
 	update(deltaTime, collisionBlocks) {
-		if (!deltaTime) return;
+		if (!deltaTime && this.isDead) return;
 
 		this.elapsedTime += deltaTime;
 		const secondsInterval = 0.1;
