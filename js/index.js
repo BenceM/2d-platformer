@@ -113,15 +113,14 @@ const renderStaticLayers = async (layersData) => {
 };
 // END - Tile setup
 
-// Change xy coordinates to move player's default position
-const player = new Player({
+let player = new Player({
 	x: 100,
 	y: 100,
 	size: 32,
 	velocity: { x: 0, y: 0 },
 });
-//make possum into an array for collision detection
-const opossums = [
+
+let opossums = [
 	new Opossum({
 		x: 490,
 		y: 100,
@@ -149,8 +148,8 @@ const opossums = [
 	}),
 ];
 
-const sprites = [];
-const hearts = [
+let sprites = [];
+let hearts = [
 	new Heart({
 		x: 10,
 		y: 10,
@@ -223,12 +222,95 @@ const keys = {
 };
 
 let lastTime = performance.now();
-const camera = { x: 0, y: 0 };
+let camera = { x: 0, y: 0 };
 const SCROLL_POST_RIGHT = 330;
 const SCROLL_POST_TOP = 100;
 const SCROLL_POST_BOTTOM = 300;
 let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
+function init() {
+	player = new Player({
+		x: 100,
+		y: 100,
+		size: 32,
+		velocity: { x: 0, y: 0 },
+	});
+	//make possum into an array for collision detection
+	opossums = [
+		new Opossum({
+			x: 490,
+			y: 100,
+		}),
+
+		new Opossum({
+			x: 700,
+			y: 100,
+			range: 100,
+		}),
+		new Opossum({
+			x: 950,
+			y: 100,
+			range: 95,
+		}),
+		new Opossum({
+			x: 1150,
+			y: 10,
+			range: 60,
+		}),
+		new Opossum({
+			x: 1200,
+			y: 200,
+			range: 93,
+		}),
+	];
+
+	sprites = [];
+	hearts = [
+		new Heart({
+			x: 10,
+			y: 10,
+			width: 21,
+			height: 18,
+			imgSrc: "hearts.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 21,
+				height: 18,
+				frames: 4,
+			},
+		}),
+		new Heart({
+			x: 33,
+			y: 10,
+			width: 21,
+			height: 18,
+			imgSrc: "hearts.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 21,
+				height: 18,
+				frames: 4,
+			},
+		}),
+		new Heart({
+			x: 56,
+			y: 10,
+			width: 21,
+			height: 18,
+			imgSrc: "hearts.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 21,
+				height: 18,
+				frames: 4,
+			},
+		}),
+	];
+	camera = { x: 0, y: 0 };
+}
 function animate(backgroundCanvas) {
 	// Calculate delta time
 	const currentTime = performance.now();
@@ -241,11 +323,11 @@ function animate(backgroundCanvas) {
 
 	// Update opossum
 	opossums
-		.reverse()
+		.toReversed()
 		.map((opossum) => opossum.update(deltaTime, collisionBlocks));
 
 	//update sprites
-	sprites.reverse().map((sprite, i) => {
+	sprites.toReversed().map((sprite, i) => {
 		sprite.update(deltaTime);
 		if (sprite.iteration === sprite.lifetime) {
 			sprites.splice(i, 1);
@@ -280,7 +362,11 @@ function animate(backgroundCanvas) {
 				);
 				opossumToRemoveIndex = index;
 			} else if (collisionDirection !== "bottom") {
-				player.setIsInvincible();
+				const fullHearts = hearts.filter((heart) => !heart.depleted);
+				if (!player.isInvincible && fullHearts.length > 0) {
+					fullHearts.at(-1).depleted = true;
+					player.setIsInvincible();
+				}
 			}
 		}
 	});
@@ -309,16 +395,18 @@ function animate(backgroundCanvas) {
 	c.drawImage(mountainBackgroundCanvas, camera.x * 0.16, 0);
 	c.drawImage(backgroundCanvas, 0, 0);
 	player.draw(c);
-	opossums.reverse().map((opossum) => opossum.draw(c));
+	opossums.toReversed().map((opossum) => opossum.draw(c));
 
-	sprites.reverse().map((sprite) => sprite.draw(c));
-	hearts.reverse().map((heart) => heart.draw(c));
+	sprites.toReversed().map((sprite) => sprite.draw(c));
 
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
 	// c.fillRect(300, SCROLL_POST_TOP, 100, 10);
 	// c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
 	c.restore();
-
+	c.save();
+	c.scale(dpr, dpr);
+	hearts.toReversed().map((heart) => heart.draw(c));
+	c.restore();
 	requestAnimationFrame(() => animate(backgroundCanvas));
 }
 
