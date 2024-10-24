@@ -34,33 +34,7 @@ const tilesets = {
 const collisionBlocks = [];
 const platforms = [];
 const blockSize = 16; // Assuming each tile is 16x16 pixels
-async function collisionsInit() {
-	const collisionBlocks = [];
-	const platforms = [];
-	const blockSize = 16;
-	collisions.forEach((row, y) => {
-		row.forEach((symbol, x) => {
-			if (symbol === 1) {
-				collisionBlocks.push(
-					new CollisionBlock({
-						x: x * blockSize,
-						y: y * blockSize,
-						size: blockSize,
-					}),
-				);
-			} else if (symbol === 2) {
-				platforms.push(
-					new Platform({
-						x: x * blockSize,
-						y: y * blockSize + blockSize,
-						width: 16,
-						height: 4,
-					}),
-				);
-			}
-		});
-	});
-}
+
 collisions.forEach((row, y) => {
 	row.forEach((symbol, x) => {
 		if (symbol === 1) {
@@ -265,7 +239,7 @@ const SCROLL_POST_TOP = 100;
 const SCROLL_POST_BOTTOM = 300;
 let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
-async function init() {
+function init() {
 	camera = { x: 0, y: 0 };
 
 	player = new Player({
@@ -352,16 +326,12 @@ async function init() {
 }
 function animate(backgroundCanvas) {
 	//
-	// if (gamePaused) {
-	// 	requestAnimationFrame(() => animate(backgroundCanvas)); // Continue to call animate to keep rendering the pause screen if needed
-	// 	return; // Stop further execution of this function
-	// } else {}
+
 	// Calculate delta time
 	const currentTime = performance.now();
-	const deltaTime = (currentTime - lastTime) / 1000;
+	const deltaTime = !gamePaused ? (currentTime - lastTime) / 1000 : 0;
 	lastTime = currentTime;
 
-	// Update player position
 	player.handleInput(keys);
 	player.update(deltaTime, collisionBlocks);
 
