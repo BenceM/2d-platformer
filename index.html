@@ -18,6 +18,8 @@
 			body {
 				background: black;
 				margin: 0;
+				height: 100vh;
+				overflow: hidden;
 			}
 
 			canvas {
@@ -30,8 +32,13 @@
 			.display-flex {
 				display: flex;
 			}
+			.gamecanvas {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 			.popup {
-				position: absolute;
+				position: fixed;
 				top: 0;
 				left: 0;
 				width: 100%;
@@ -41,20 +48,37 @@
 				justify-content: center;
 				align-items: center;
 				flex-direction: column;
-				color: white;
-				font-size: 2em;
+				color: #e39e5a;
+				font-size: 3rem;
+				z-index: 1000;
+			}
+			.popup-menu {
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				background: url("./images/menu1.png") no-repeat center center / cover;
+				padding: 11rem 16rem; /* Add space around the content */
+				transform: scale(0.3);
+				gap: 2rem;
 			}
 			.popup button {
 				padding: 10px 20px;
+				background-color: #e39e5a;
 				font-size: 1.2em;
+				color: #393838;
 				cursor: pointer;
 			}
 		</style>
+
 		<div id="gameOverPopup" class="display-none popup">
-			<h1>Game Over</h1>
-			<button id="restartButton">Restart</button>
+			<div class="display-flex popup-menu">
+				<h1>Game Over</h1>
+				<button id="restartButton">Restart</button>
+			</div>
 		</div>
-		<canvas style="image-rendering: pixelated"></canvas>
+
+		<canvas style="image-rendering: pixelated; background-color: red"></canvas>
+
 		<script src="./data/l_New_Layer_1.js"></script>
 		<script src="./data/l_New_Layer_2.js"></script>
 		<script src="./data/l_Decorations.js"></script>
