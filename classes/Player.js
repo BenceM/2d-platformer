@@ -58,7 +58,6 @@ class Player {
 		};
 		this.isInvincible = false;
 		this.isFlickering = false;
-		this.isDead = false;
 	}
 	setIsInvincible() {
 		this.isInvincible = true;

@@ -324,6 +324,8 @@ function init() {
 	];
 	gamePaused = false;
 }
+
+//UPDATE
 function animate(backgroundCanvas) {
 	//
 
