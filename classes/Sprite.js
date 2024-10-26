@@ -12,6 +12,12 @@ class Sprite {
 			height: 28,
 			frames: 4,
 		},
+		hitBox = {
+			x: 0,
+			y: 0,
+			height: 0,
+			width: 0,
+		},
 	}) {
 		this.x = x;
 		this.y = y;
@@ -30,6 +36,7 @@ class Sprite {
 		this.currentSprite = spriteAnimation;
 		this.lifetime = 1;
 		this.iteration = 0;
+		this.hitBox = hitBox;
 	}
 
 	draw(c) {

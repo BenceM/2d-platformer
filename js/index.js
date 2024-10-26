@@ -26,7 +26,7 @@ const tilesets = {
 	l_Decor_top: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_NPC: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Tiles: { imageUrl: "./images/tileset.png", tileSize: 16 },
-	l_Rewards: { imageUrl: "./images/decorations.png", tileSize: 16 },
+	// l_Rewards: { imageUrl: "./images/decorations.png", tileSize: 16 },
 };
 
 // Tile setup
@@ -239,7 +239,38 @@ const SCROLL_POST_TOP = 100;
 const SCROLL_POST_BOTTOM = 300;
 let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
+let rewards = [];
 function init() {
+	rewards = [];
+	l_Rewards.forEach((row, y) => {
+		row.forEach((symbol, x) => {
+			if (symbol === 18) {
+				rewards.push(
+					new Sprite({
+						x: x * blockSize,
+						y: y * blockSize,
+						width: 15,
+						height: 13,
+						imgSrc: "gem.png",
+						spriteAnimation: {
+							x: 0,
+							y: 0,
+							width: 15,
+							height: 13,
+							frames: 5,
+						},
+						hitBox: {
+							x: x * blockSize,
+							y: y * blockSize,
+							width: 15,
+							height: 13,
+						},
+					}),
+				);
+			}
+		});
+	});
+
 	camera = { x: 0, y: 0 };
 
 	player = new Player({
@@ -350,6 +381,22 @@ function animate(backgroundCanvas) {
 		}
 	});
 
+	//update rewards
+	rewards.toReversed().map((reward) => {
+		reward.update(deltaTime);
+	});
+	rewards.forEach((reward, i) => {
+		if (checkCollisions(player, reward)) {
+			rewards.splice(i, 1);
+		}
+	});
+	// for (let i = rewards.length - 1; i >= 0; i--) {
+	// 	const collisionDirection = checkCollisions(player, rewards[i]);
+	// 	if (collisionDirection) {
+	// 		rewards.splice(i, 1);
+	// 	}
+	// }
+
 	//Jump and remove opossums
 	//console.log(checkCollisions(player, opossums));
 
@@ -416,6 +463,7 @@ function animate(backgroundCanvas) {
 	opossums.toReversed().map((opossum) => opossum.draw(c));
 
 	sprites.toReversed().map((sprite) => sprite.draw(c));
+	rewards.toReversed().map((reward) => reward.draw(c));
 
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
 	// c.fillRect(300, SCROLL_POST_TOP, 100, 10);
@@ -442,5 +490,5 @@ const startRendering = async () => {
 		console.error("Error during rendering:", error);
 	}
 };
-
+init();
 startRendering();
