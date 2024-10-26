@@ -1,5 +1,6 @@
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
+
 const dpr = window.devicePixelRatio || 1;
 
 canvas.width = 1024 * dpr;
@@ -240,7 +241,23 @@ const SCROLL_POST_BOTTOM = 300;
 let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
 let rewards = [];
+let gemCounter = 0;
+let rewardUI = new Sprite({
+	x: 13,
+	y: blockSize * 2,
+	width: 16,
+	height: 16,
+	imgSrc: "gem.png",
+	spriteAnimation: {
+		x: 0,
+		y: 0,
+		width: 15,
+		height: 13,
+		frames: 5,
+	},
+});
 function init() {
+	gemCounter = 0;
 	rewards = [];
 	l_Rewards.forEach((row, y) => {
 		row.forEach((symbol, x) => {
@@ -387,6 +404,25 @@ function animate(backgroundCanvas) {
 	});
 	rewards.forEach((reward, i) => {
 		if (checkCollisions(player, reward)) {
+			// item feedback animation
+			gemCounter++;
+			sprites.push(
+				new Sprite({
+					x: reward.x - 8,
+					y: reward.y - 8,
+					width: 32,
+					height: 32,
+					imgSrc: "item-feedback.png",
+					spriteAnimation: {
+						x: 0,
+						y: 0,
+						width: 32,
+						height: 32,
+						frames: 5,
+					},
+				}),
+			);
+			//remove the gem on collision
 			rewards.splice(i, 1);
 		}
 	});
@@ -472,6 +508,13 @@ function animate(backgroundCanvas) {
 	c.save();
 	c.scale(dpr, dpr);
 	hearts.toReversed().map((heart) => heart.draw(c));
+	rewardUI.draw(c);
+	c.font = "600 18px Arial";
+	c.fillStyle = "#e2e1e1";
+	c.fillText(String(gemCounter), 36, 46);
+	c.strokeStyle = "#636363";
+	c.lineWidth = 0.3;
+	c.strokeText(String(gemCounter), 36, 46);
 	c.restore();
 	requestAnimationFrame(() => animate(backgroundCanvas));
 }
