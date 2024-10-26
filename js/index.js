@@ -510,10 +510,10 @@ function animate(backgroundCanvas) {
 	hearts.toReversed().map((heart) => heart.draw(c));
 	rewardUI.draw(c);
 	c.font = "600 18px Arial";
-	c.fillStyle = "#e2e1e1";
+	c.fillStyle = "#e8a460";
 	c.fillText(String(gemCounter), 36, 46);
-	c.strokeStyle = "#636363";
-	c.lineWidth = 0.3;
+	c.strokeStyle = "#343333";
+	c.lineWidth = 0.6;
 	c.strokeText(String(gemCounter), 36, 46);
 	c.restore();
 	requestAnimationFrame(() => animate(backgroundCanvas));
