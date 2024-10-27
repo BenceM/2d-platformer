@@ -224,9 +224,11 @@ const keys = {
 	w: {
 		pressed: false,
 	},
+
 	a: {
 		pressed: false,
 	},
+
 	d: {
 		pressed: false,
 	},
@@ -489,7 +491,7 @@ function animate(backgroundCanvas) {
 
 	// Render scene
 	c.save();
-	c.scale(dpr, dpr);
+	c.scale(dpr + 0.8, dpr + 0.8);
 	c.translate(-camera.x, -camera.y);
 	c.clearRect(0, 0, canvas.width, canvas.height);
 	c.drawImage(oceanBackgroundCanvas, camera.x * 0.32, 0);
@@ -506,7 +508,7 @@ function animate(backgroundCanvas) {
 	// c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
 	c.restore();
 	c.save();
-	c.scale(dpr, dpr);
+	c.scale(dpr + 0.8, dpr + 0.8);
 	hearts.toReversed().map((heart) => heart.draw(c));
 	rewardUI.draw(c);
 	c.font = "600 18px Arial";
@@ -535,3 +537,5 @@ const startRendering = async () => {
 };
 init();
 startRendering();
+
+//change camera movement for underground
