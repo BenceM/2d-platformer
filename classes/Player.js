@@ -58,6 +58,8 @@ class Player {
 		};
 		this.isInvincible = false;
 		this.isFlickering = false;
+		this.jumpMax = 2;
+		this.currentJump = 0;
 	}
 	setIsInvincible() {
 		this.isInvincible = true;
@@ -185,8 +187,20 @@ class Player {
 		}
 	}
 	jump() {
-		this.velocity.y = -JUMP_POWER;
-		this.isOnGround = false;
+		if (this.currentJump >= this.jumpMax) {
+			if (this.isOnGround) {
+				this.currentJump = 0;
+				this.velocity.y = -JUMP_POWER;
+				this.currentJump++;
+				this.isOnGround = false;
+			}
+
+			return;
+		} else {
+			this.velocity.y = -JUMP_POWER;
+			this.currentJump++;
+			this.isOnGround = false;
+		}
 	}
 
 	updateHorizontalPosition(deltaTime) {
