@@ -9,6 +9,7 @@ canvas.height = 576 * dpr;
 const OceanLayerData = { l_New_Layer_1 };
 const MountainLayerData = { l_New_Layer_2 };
 const layersData = {
+	l_Cave_background,
 	l_Collision,
 	l_Decorations,
 	l_Background_tiles,
@@ -22,6 +23,7 @@ const tilesets = {
 	l_Collision: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_New_Layer_1: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_New_Layer_2: { imageUrl: "./images/decorations.png", tileSize: 16 },
+	l_Cave_background: { imageUrl: "./images/tileset.png", tileSize: 16 },
 	l_Decorations: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Background_tiles: { imageUrl: "./images/tileset.png", tileSize: 16 },
 	l_Decor_top: { imageUrl: "./images/decorations.png", tileSize: 16 },
