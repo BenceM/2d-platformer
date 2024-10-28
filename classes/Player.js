@@ -187,6 +187,7 @@ class Player {
 		}
 	}
 	jump() {
+		console.log(this.isOnGround);
 		if (this.currentJump >= this.jumpMax) {
 			if (this.isOnGround) {
 				this.currentJump = 0;
@@ -282,6 +283,7 @@ class Player {
 					this.y = collisionBlock.y - this.height - buffer;
 					this.hitBox.y = collisionBlock.y - this.hitBox.height - buffer;
 					this.isOnGround = true;
+					this.currentJump = 0;
 					break;
 				}
 			}
@@ -295,6 +297,7 @@ class Player {
 				this.velocity.y = 0;
 				this.y = platform.y - this.height - buffer;
 				this.isOnGround = true;
+				this.currentJump = 0;
 				return;
 			}
 		}
