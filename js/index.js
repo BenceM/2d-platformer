@@ -376,6 +376,7 @@ function init() {
 	];
 	gamePaused = false;
 }
+//helper for position checking
 //setInterval(() => console.log(player.y, camera.y), 400);
 //UPDATE
 function animate(backgroundCanvas) {
@@ -486,7 +487,8 @@ function animate(backgroundCanvas) {
 		camera.x = scrollPostDistance;
 	}
 	if (player.y < SCROLL_POST_TOP) {
-		camera.y = player.y - SCROLL_POST_TOP;
+		//Math.min(player.y - SCROLL_POST_TOP, -1)
+		camera.y = Math.max(player.y - SCROLL_POST_TOP, 0);
 	} else if (player.y > SCROLL_POST_BOTTOM) {
 		camera.y = Math.min(player.y - SCROLL_POST_BOTTOM, 230);
 	}
@@ -504,10 +506,11 @@ function animate(backgroundCanvas) {
 
 	sprites.toReversed().map((sprite) => sprite.draw(c));
 	rewards.toReversed().map((reward) => reward.draw(c));
-
+	//helpers for camera points
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
 	//c.fillRect(300, SCROLL_POST_TOP, 100, 10);
-	c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
+	//c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
+
 	c.restore();
 	c.save();
 	c.scale(dpr + 0.8, dpr + 0.8);
