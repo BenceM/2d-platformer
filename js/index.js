@@ -289,6 +289,30 @@ function init() {
 					}),
 				);
 			}
+			if (symbol === 19) {
+				rewards.push(
+					new Sprite({
+						x: x * blockSize,
+						y: y * blockSize,
+						width: 21,
+						height: 21,
+						imgSrc: "cherry.png",
+						spriteAnimation: {
+							x: 0,
+							y: 0,
+							width: 21,
+							height: 21,
+							frames: 5,
+						},
+						hitBox: {
+							x: x * blockSize,
+							y: y * blockSize,
+							width: 21,
+							height: 21,
+						},
+					}),
+				);
+			}
 		});
 	});
 
@@ -378,6 +402,7 @@ function init() {
 }
 //helper for position checking
 //setInterval(() => console.log(player.y, camera.y), 400);
+//setInterval(() => console.log(player.x.toFixed(2), camera.x.toFixed(2)), 400);
 //UPDATE
 function animate(backgroundCanvas) {
 	//
@@ -482,7 +507,7 @@ function animate(backgroundCanvas) {
 	//end
 	//camera movement setup
 
-	if (player.x > SCROLL_POST_RIGHT && player.x < 1680) {
+	if (player.x > SCROLL_POST_RIGHT && player.x < 2000) {
 		const scrollPostDistance = player.x - SCROLL_POST_RIGHT;
 		camera.x = scrollPostDistance;
 	}
