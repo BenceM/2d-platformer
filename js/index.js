@@ -3,7 +3,7 @@ const c = canvas.getContext("2d");
 
 const dpr = window.devicePixelRatio || 1;
 
-canvas.width = 1024 * dpr;
+canvas.width = 1024 * dpr * 1.1;
 canvas.height = 576 * dpr;
 
 const OceanLayerData = { l_New_Layer_1 };
@@ -14,6 +14,7 @@ const layersData = {
 	l_Decorations,
 	l_Background_tiles,
 	l_Decor_top,
+	l_Rocks,
 	l_NPC,
 	l_Tiles,
 	l_Rewards,
@@ -27,6 +28,7 @@ const tilesets = {
 	l_Decorations: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Background_tiles: { imageUrl: "./images/tileset.png", tileSize: 16 },
 	l_Decor_top: { imageUrl: "./images/decorations.png", tileSize: 16 },
+	l_Rocks: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_NPC: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Tiles: { imageUrl: "./images/tileset.png", tileSize: 16 },
 	// l_Rewards: { imageUrl: "./images/decorations.png", tileSize: 16 },
