@@ -479,6 +479,7 @@ function animate(backgroundCanvas) {
 		opossums.splice(opossumToRemoveIndex, 1);
 	}
 	//end
+	//camera movement setup
 	if (player.x > SCROLL_POST_RIGHT && player.x < 1680) {
 		const scrollPostDistance = player.x - SCROLL_POST_RIGHT;
 		camera.x = scrollPostDistance;
@@ -487,8 +488,6 @@ function animate(backgroundCanvas) {
 		camera.y = player.y - SCROLL_POST_TOP;
 	} else if (player.y > SCROLL_POST_BOTTOM) {
 		camera.y = player.y - SCROLL_POST_BOTTOM;
-	} else {
-		camera.y = 0;
 	}
 
 	// Render scene
@@ -506,8 +505,8 @@ function animate(backgroundCanvas) {
 	rewards.toReversed().map((reward) => reward.draw(c));
 
 	// c.fillRect(SCROLL_POST_RIGHT, 150, 10, 100);
-	// c.fillRect(300, SCROLL_POST_TOP, 100, 10);
-	// c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
+	//c.fillRect(300, SCROLL_POST_TOP, 100, 10);
+	c.fillRect(300, SCROLL_POST_BOTTOM, 100, 10);
 	c.restore();
 	c.save();
 	c.scale(dpr + 0.8, dpr + 0.8);

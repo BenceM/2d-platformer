@@ -187,7 +187,6 @@ class Player {
 		}
 	}
 	jump() {
-		console.log(this.isOnGround);
 		if (this.currentJump >= this.jumpMax) {
 			if (this.isOnGround) {
 				this.currentJump = 0;
