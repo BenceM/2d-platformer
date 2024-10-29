@@ -376,7 +376,7 @@ function init() {
 	];
 	gamePaused = false;
 }
-
+//setInterval(() => console.log(player.y, camera.y), 400);
 //UPDATE
 function animate(backgroundCanvas) {
 	//
@@ -480,6 +480,7 @@ function animate(backgroundCanvas) {
 	}
 	//end
 	//camera movement setup
+
 	if (player.x > SCROLL_POST_RIGHT && player.x < 1680) {
 		const scrollPostDistance = player.x - SCROLL_POST_RIGHT;
 		camera.x = scrollPostDistance;
@@ -487,7 +488,7 @@ function animate(backgroundCanvas) {
 	if (player.y < SCROLL_POST_TOP) {
 		camera.y = player.y - SCROLL_POST_TOP;
 	} else if (player.y > SCROLL_POST_BOTTOM) {
-		camera.y = player.y - SCROLL_POST_BOTTOM;
+		camera.y = Math.min(player.y - SCROLL_POST_BOTTOM, 230);
 	}
 
 	// Render scene
