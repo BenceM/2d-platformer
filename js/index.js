@@ -151,6 +151,21 @@ let friendlies = [
 			frames: 4,
 		},
 	}),
+
+	new Sprite({
+		x: 1170,
+		y: 495,
+		width: 90,
+		height: 58,
+		imgSrc: "squirrel-idle.png",
+		spriteAnimation: {
+			x: 0,
+			y: 0,
+			width: 90,
+			height: 58,
+			frames: 8,
+		},
+	}),
 ];
 let sprites = [];
 let hearts = [
