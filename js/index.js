@@ -15,7 +15,7 @@ const layersData = {
 	l_Background_tiles,
 	l_Decor_top,
 	l_Rocks,
-	l_NPC,
+	// l_NPC,
 	l_Tiles,
 	l_Rewards,
 };
@@ -29,7 +29,7 @@ const tilesets = {
 	l_Background_tiles: { imageUrl: "./images/tileset.png", tileSize: 16 },
 	l_Decor_top: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Rocks: { imageUrl: "./images/decorations.png", tileSize: 16 },
-	l_NPC: { imageUrl: "./images/decorations.png", tileSize: 16 },
+	// l_NPC: { imageUrl: "./images/decorations.png", tileSize: 16 },
 	l_Tiles: { imageUrl: "./images/tileset.png", tileSize: 16 },
 	// l_Rewards: { imageUrl: "./images/decorations.png", tileSize: 16 },
 };
@@ -135,33 +135,7 @@ let player = new Player({
 	velocity: { x: 0, y: 0 },
 });
 
-let opossums = [
-	new Opossum({
-		x: 490,
-		y: 100,
-	}),
-
-	new Opossum({
-		x: 700,
-		y: 100,
-		range: 100,
-	}),
-	new Opossum({
-		x: 950,
-		y: 100,
-		range: 95,
-	}),
-	new Opossum({
-		x: 1150,
-		y: 10,
-		range: 60,
-	}),
-	new Opossum({
-		x: 1200,
-		y: 200,
-		range: 93,
-	}),
-];
+let opossums = [];
 let friendlies = [
 	new Sprite({
 		x: 1550,
@@ -258,7 +232,7 @@ let camera = { x: 0, y: 0 };
 
 const SCROLL_POST_RIGHT = 330;
 const SCROLL_POST_TOP = 100;
-const SCROLL_POST_BOTTOM = 300;
+const SCROLL_POST_BOTTOM = 270;
 let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
 let rewards = [];
@@ -353,11 +327,64 @@ function init() {
 			y: 100,
 			range: 100,
 		}),
+		// downstairs left cave
+		new Opossum({
+			x: 340,
+			y: 580,
+			range: 100,
+		}),
+		new Opossum({
+			x: 450,
+			y: 580,
+			range: 100,
+		}),
+		new Opossum({
+			x: 120,
+			y: 580,
+			range: 100,
+		}),
+		new Opossum({
+			x: 499,
+			y: 511,
+			range: 100,
+		}),
+		//end
+		//middle cave
 		new Opossum({
 			x: 950,
-			y: 100,
-			range: 95,
+			y: 580,
+			range: 200,
 		}),
+		new Opossum({
+			x: 1127,
+			y: 580,
+			range: 100,
+		}),
+		new Opossum({
+			x: 1280,
+			y: 580,
+			range: 100,
+		}),
+		//end
+		//cave right
+		new Opossum({
+			x: 1400,
+			y: 580,
+			range: 100,
+		}),
+		new Opossum({
+			x: 1490,
+			y: 447,
+			range: 30,
+		}),
+		//end
+		//top middle
+		new Opossum({
+			x: 970,
+			y: 180,
+			range: 70,
+		}),
+
 		new Opossum({
 			x: 1150,
 			y: 10,
@@ -368,6 +395,7 @@ function init() {
 			y: 200,
 			range: 93,
 		}),
+		//end
 	];
 
 	sprites = [];
@@ -536,7 +564,7 @@ function animate(backgroundCanvas) {
 		//Math.min(player.y - SCROLL_POST_TOP, -1)
 		camera.y = Math.max(player.y - SCROLL_POST_TOP, 0);
 	} else if (player.y > SCROLL_POST_BOTTOM) {
-		camera.y = Math.min(player.y - SCROLL_POST_BOTTOM, 230);
+		camera.y = Math.min(player.y - SCROLL_POST_BOTTOM, 250);
 	}
 
 	// Render scene
@@ -589,4 +617,4 @@ const startRendering = async () => {
 init();
 startRendering();
 
-//CHANGE CHERRY ANIMATION
+//Add animation for player dmg
