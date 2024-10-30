@@ -162,7 +162,22 @@ let opossums = [
 		range: 93,
 	}),
 ];
-
+let friendlies = [
+	new Sprite({
+		x: 1550,
+		y: 149,
+		width: 35,
+		height: 56,
+		imgSrc: "frog-idle.png",
+		spriteAnimation: {
+			x: 0,
+			y: 0,
+			width: 35,
+			height: 56,
+			frames: 4,
+		},
+	}),
+];
 let sprites = [];
 let hearts = [
 	new Heart({
@@ -296,21 +311,21 @@ function init() {
 					new Sprite({
 						x: x * blockSize,
 						y: y * blockSize,
-						width: 21,
-						height: 21,
-						imgSrc: "cherry.png",
+						width: 17,
+						height: 14,
+						imgSrc: "acorn.png",
 						spriteAnimation: {
 							x: 0,
 							y: 0,
-							width: 21,
-							height: 21,
-							frames: 5,
+							width: 16,
+							height: 14,
+							frames: 3,
 						},
 						hitBox: {
 							x: x * blockSize,
 							y: y * blockSize,
-							width: 21,
-							height: 21,
+							width: 16,
+							height: 14,
 						},
 					}),
 				);
@@ -429,6 +444,10 @@ function animate(backgroundCanvas) {
 			sprites.splice(i, 1);
 		}
 	});
+	//update friendlies
+	friendlies.toReversed().map((friendly, i) => {
+		friendly.update(deltaTime);
+	});
 
 	//update rewards
 	rewards.toReversed().map((reward) => {
@@ -528,9 +547,9 @@ function animate(backgroundCanvas) {
 	c.drawImage(oceanBackgroundCanvas, camera.x * 0.32, 0);
 	c.drawImage(mountainBackgroundCanvas, camera.x * 0.16, 0);
 	c.drawImage(backgroundCanvas, 0, 0);
+	friendlies.toReversed().map((friendly) => friendly.draw(c));
 	player.draw(c);
 	opossums.toReversed().map((opossum) => opossum.draw(c));
-
 	sprites.toReversed().map((sprite) => sprite.draw(c));
 	rewards.toReversed().map((reward) => reward.draw(c));
 	//helpers for camera points
@@ -570,4 +589,4 @@ const startRendering = async () => {
 init();
 startRendering();
 
-//change camera movement for underground
+//CHANGE CHERRY ANIMATION

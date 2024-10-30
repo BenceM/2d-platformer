@@ -72,7 +72,7 @@ class Sprite {
 		if (!deltaTime) return;
 
 		this.elapsedTime += deltaTime;
-		const secondsInterval = 0.1;
+		const secondsInterval = 0.12;
 		//this works because the remaineder will be 0 when its the end and restart the cycle
 		if (this.elapsedTime > 0.1) {
 			this.currentFrame = (this.currentFrame + 1) % this.currentSprite.frames;
