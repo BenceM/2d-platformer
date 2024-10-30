@@ -556,6 +556,7 @@ function animate(backgroundCanvas) {
 				opossumToRemoveIndex = index;
 			} else if (collisionDirection !== "bottom") {
 				const fullHearts = hearts.filter((heart) => !heart.depleted);
+				player.takeDamage();
 				if (!player.isInvincible && fullHearts.length > 0) {
 					fullHearts.at(-1).depleted = true;
 					player.setIsInvincible();
@@ -633,3 +634,7 @@ init();
 startRendering();
 
 //Add animation for player dmg
+//Redesign menu
+//Add win condition
+//Add start menu
+//Add music

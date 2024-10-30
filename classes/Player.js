@@ -47,6 +47,13 @@ class Player {
 				height: 32,
 				frames: 1,
 			},
+			damage: {
+				x: 0,
+				y: 32 * 4,
+				width: 33,
+				height: 32,
+				frames: 2,
+			},
 		};
 		this.currentSprite = this.sprites.idle;
 		this.direction = "right";
@@ -57,6 +64,7 @@ class Player {
 			width: 20,
 		};
 		this.isInvincible = false;
+		// this.previousInvincible = false;
 		this.isFlickering = false;
 		this.jumpMax = 2;
 		this.currentJump = 0;
@@ -70,6 +78,7 @@ class Player {
 
 		setTimeout(() => {
 			this.isInvincible = false;
+			// this.previousInvincible = false;
 			clearInterval(flickerInterval);
 			this.isFlickering = false;
 		}, 1500);
@@ -155,6 +164,12 @@ class Player {
 		}
 	}
 	switchSprites() {
+		// if (this.isInvincible === true && this.previousInvincible === false) {
+		// 	console.log("hello");
+		// 	this.currentFrame = 0;
+		// 	this.currentSprite = this.sprites.damage;
+		// 	this.previousInvincible = true;
+		// }
 		if (
 			this.isOnGround &&
 			this.velocity.x === 0 &&
@@ -202,7 +217,10 @@ class Player {
 			this.isOnGround = false;
 		}
 	}
-
+	takeDamage() {
+		this.currentFrame = 0;
+		this.currentSprite = this.sprites.damage;
+	}
 	updateHorizontalPosition(deltaTime) {
 		this.x += this.velocity.x * deltaTime;
 		this.hitBox.x += this.velocity.x * deltaTime;
