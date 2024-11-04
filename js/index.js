@@ -5,7 +5,8 @@ const dpr = window.devicePixelRatio || 1;
 
 canvas.width = 1024 * dpr * 1.1;
 canvas.height = 576 * dpr;
-
+let gameOver = false;
+let gameWon = false;
 const OceanLayerData = { l_New_Layer_1 };
 const MountainLayerData = { l_New_Layer_2 };
 const layersData = {
@@ -119,99 +120,21 @@ const renderStaticLayers = async (layersData) => {
 };
 // END - Tile setup
 //game over function
-function showGameOverPopup() {
-	document.getElementById("gameOverPopup").classList.remove("display-none");
-	document.getElementById("gameOverPopup").classList.add("display-flex");
+// function showGameOverPopup() {
+// 	document.getElementById("gameOverPopup").classList.remove("display-none");
+// 	document.getElementById("gameOverPopup").classList.add("display-flex");
 
-	gamePaused = true;
-}
-let gamePaused = false;
+// 	gamePaused = true;
+// }
+// let gamePaused = false;
 //end
 
-let player = new Player({
-	x: 100,
-	y: 100,
-	size: 32,
-	velocity: { x: 0, y: 0 },
-});
+let player = null;
 
 let opossums = [];
-let friendlies = [
-	new Sprite({
-		x: 1550,
-		y: 149,
-		width: 35,
-		height: 56,
-		imgSrc: "frog-idle.png",
-		spriteAnimation: {
-			x: 0,
-			y: 0,
-			width: 35,
-			height: 56,
-			frames: 4,
-		},
-	}),
-
-	new Sprite({
-		x: 1170,
-		y: 495,
-		width: 90,
-		height: 58,
-		imgSrc: "squirrel-idle.png",
-		spriteAnimation: {
-			x: 0,
-			y: 0,
-			width: 90,
-			height: 58,
-			frames: 8,
-		},
-	}),
-];
+let friendlies = [];
 let sprites = [];
-let hearts = [
-	new Heart({
-		x: 10,
-		y: 10,
-		width: 21,
-		height: 18,
-		imgSrc: "hearts.png",
-		spriteAnimation: {
-			x: 0,
-			y: 0,
-			width: 21,
-			height: 18,
-			frames: 4,
-		},
-	}),
-	new Heart({
-		x: 33,
-		y: 10,
-		width: 21,
-		height: 18,
-		imgSrc: "hearts.png",
-		spriteAnimation: {
-			x: 0,
-			y: 0,
-			width: 21,
-			height: 18,
-			frames: 4,
-		},
-	}),
-	new Heart({
-		x: 56,
-		y: 10,
-		width: 21,
-		height: 18,
-		imgSrc: "hearts.png",
-		spriteAnimation: {
-			x: 0,
-			y: 0,
-			width: 21,
-			height: 18,
-			frames: 4,
-		},
-	}),
-];
+let hearts = [];
 
 // new Sprite({
 // 	x: 700,
@@ -252,20 +175,131 @@ let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
 let rewards = [];
 let gemCounter = 0;
-let rewardUI = new Sprite({
-	x: 13,
-	y: blockSize * 2,
-	width: 16,
-	height: 16,
-	imgSrc: "gem.png",
-	spriteAnimation: {
-		x: 0,
-		y: 0,
-		width: 15,
-		height: 13,
-		frames: 5,
-	},
-});
+let rewardUI = null;
+
+function declarations() {
+	player = new Player({
+		x: 100,
+		y: 100,
+		size: 32,
+		velocity: { x: 0, y: 0 },
+	});
+
+	opossums = [];
+	friendlies = [
+		new Sprite({
+			x: 1550,
+			y: 149,
+			width: 35,
+			height: 56,
+			imgSrc: "frog-idle.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 35,
+				height: 56,
+				frames: 4,
+			},
+		}),
+
+		new Sprite({
+			x: 1170,
+			y: 495,
+			width: 90,
+			height: 58,
+			imgSrc: "squirrel-idle.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 90,
+				height: 58,
+				frames: 8,
+			},
+		}),
+	];
+	sprites = [];
+	hearts = [
+		new Heart({
+			x: 10,
+			y: 10,
+			width: 21,
+			height: 18,
+			imgSrc: "hearts.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 21,
+				height: 18,
+				frames: 4,
+			},
+		}),
+		new Heart({
+			x: 33,
+			y: 10,
+			width: 21,
+			height: 18,
+			imgSrc: "hearts.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 21,
+				height: 18,
+				frames: 4,
+			},
+		}),
+		new Heart({
+			x: 56,
+			y: 10,
+			width: 21,
+			height: 18,
+			imgSrc: "hearts.png",
+			spriteAnimation: {
+				x: 0,
+				y: 0,
+				width: 21,
+				height: 18,
+				frames: 4,
+			},
+		}),
+	];
+
+	// new Sprite({
+	// 	x: 700,
+	// 	y: 100,
+	// 	width: 32,
+	// 	height: 32,
+	// 	imgSrc: "enemy-death.png",
+	// 	spriteAnimation: {
+	// 		x: 0,
+	// 		y: 0,
+	// 		width: 28,
+	// 		height: 26,
+	// 		frames: 4,
+	// 	},
+	// }),
+
+	lastTime = performance.now();
+	camera = { x: 0, y: 0 };
+
+	oceanBackgroundCanvas = null;
+	mountainBackgroundCanvas = null;
+	rewards = [];
+	gemCounter = 0;
+	rewardUI = new Sprite({
+		x: 13,
+		y: blockSize * 2,
+		width: 16,
+		height: 16,
+		imgSrc: "gem.png",
+		spriteAnimation: {
+			x: 0,
+			y: 0,
+			width: 15,
+			height: 13,
+			frames: 5,
+		},
+	});
+}
 function init() {
 	gemCounter = 0;
 	rewards = [];
@@ -458,7 +492,7 @@ function init() {
 			},
 		}),
 	];
-	gamePaused = false;
+	gameOver = false;
 }
 //helper for position checking
 //setInterval(() => console.log(player.y, camera.y), 400);
@@ -469,8 +503,12 @@ function animate(backgroundCanvas) {
 
 	// Calculate delta time
 	const currentTime = performance.now();
-	const deltaTime = !gamePaused ? (currentTime - lastTime) / 1000 : 0;
+	const deltaTime = !gameOver ? (currentTime - lastTime) / 1000 : 0;
 	lastTime = currentTime;
+	if (gameOver) {
+		renderGameOverMenu();
+		return;
+	}
 
 	player.handleInput(keys);
 	player.update(deltaTime, collisionBlocks);
@@ -561,7 +599,8 @@ function animate(backgroundCanvas) {
 					fullHearts.at(-1).depleted = true;
 					player.setIsInvincible();
 				} else if (fullHearts.length === 0) {
-					showGameOverPopup();
+					// showGameOverPopup();
+					gameOver = true;
 				}
 			}
 		}
@@ -630,10 +669,127 @@ const startRendering = async () => {
 		console.error("Error during rendering:", error);
 	}
 };
+
+//Creating the menus
+
+function renderGameOverMenu() {
+	if (!gameOver) return;
+
+	// Menu dimensions
+	const menuWidth = 300;
+	const menuHeight = 200;
+
+	// Menu position relative to camera
+	const menuX = player.x + (canvas.width / 6 - menuWidth) / 2;
+	const menuY = player.y + (canvas.height - menuHeight) / 2;
+
+	// Draw menu background
+	c.fillStyle = "rgba(0, 0, 0, 0.75)";
+	c.fillRect(menuX, menuY, menuWidth, menuHeight);
+
+	// Draw menu outline with tiles
+	drawMenuOutline(menuX, menuY, menuWidth, menuHeight);
+
+	// Text and buttons
+	c.fillStyle = "#FFFFFF";
+	c.font = "20px Arial";
+	c.fillText("Game Over", menuX + 90, menuY + 40);
+
+	// Retry Button
+	c.fillStyle = "#FF0000";
+	const retryButton = {
+		x: menuX + 100,
+		y: menuY + 100,
+		width: 100,
+		height: 40,
+	};
+	c.fillRect(
+		retryButton.x,
+		retryButton.y,
+		retryButton.width,
+		retryButton.height,
+	);
+
+	c.fillStyle = "#FFFFFF";
+	c.fillText("Retry", retryButton.x + 25, retryButton.y + 25);
+
+	// Mouse interaction
+	canvas.addEventListener("click", function onClick(e) {
+		// console.log(e);
+		const rect = canvas.getBoundingClientRect();
+		const scaleX = canvas.width / rect.width; // Scale factor in the X direction
+		const scaleY = canvas.height / rect.height; // Scale factor in the Y direction
+
+		// Calculate mouse position relative to the canvas, adjusted by the camera and scale
+		const mouseX = (e.clientX - rect.left) * scaleX;
+		const mouseY = (e.clientY - rect.top) * scaleY;
+		console.log("MouseX:", mouseX, "MouseY:", mouseY); // Debugging mouse position
+		console.log("RetryButtonX:", retryButton.x, "RetryButtonY:", retryButton.y); // Debugging button position
+		// console.log("rect");
+		// console.log(rect);
+
+		// console.log("mouseX");
+		// console.log(mouseX);
+
+		// console.log("mouseY");
+		// console.log(mouseY);
+
+		// Check if the Retry button is clicked
+		if (
+			mouseX >= retryButton.x &&
+			mouseX <= retryButton.x + retryButton.width &&
+			mouseY >= retryButton.y &&
+			mouseY <= retryButton.y + retryButton.height
+		) {
+			resetGame();
+			canvas.removeEventListener("click", onClick);
+		}
+	});
+}
+
+function resetGame() {
+	console.log("click");
+	gameOver = false;
+	declarations();
+	init();
+	startRendering();
+}
+function drawMenuOutline(x, y, width, height) {
+	console.log("hello");
+	const tileSize = 16; // Assuming each tile is 32x32 pixels
+	const tileImage = new Image();
+	tileImage.src = "Images/player.png";
+
+	for (let i = 0; i < width / tileSize; i++) {
+		// Top border
+		c.drawImage(tileImage, x + i * tileSize, y, tileSize, tileSize);
+		// Bottom border
+		c.drawImage(
+			tileImage,
+			x + i * tileSize,
+			y + height - tileSize,
+			tileSize,
+			tileSize,
+		);
+	}
+
+	for (let j = 0; j < height / tileSize; j++) {
+		// Left border
+		c.drawImage(tileImage, x, y + j * tileSize, tileSize, tileSize);
+		// Right border
+		c.drawImage(
+			tileImage,
+			x + width - tileSize,
+			y + j * tileSize,
+			tileSize,
+			tileSize,
+		);
+	}
+}
+declarations();
 init();
 startRendering();
 
-//Add animation for player dmg
 //Redesign menu
 //Add win condition
 //Add start menu
