@@ -499,7 +499,16 @@ function init() {
 //setInterval(() => console.log(player.x.toFixed(2), camera.x.toFixed(2)), 400);
 //UPDATE
 function animate(backgroundCanvas) {
-	//
+	// console.log("player.x:");
+	// console.log("player.y:");
+	// console.log(player.x);
+
+	// console.log(player.y);
+
+	// console.log("camera.x:");
+	// console.log("camera.y:");
+	// console.log(camera.x);
+	// console.log(camera.y);
 
 	// Calculate delta time
 	const currentTime = performance.now();
@@ -680,9 +689,19 @@ function renderGameOverMenu() {
 	const menuHeight = 200;
 
 	// Menu position relative to camera
-	const menuX = player.x + (canvas.width / 6 - menuWidth) / 2;
-	const menuY = player.y + (canvas.height - menuHeight) / 2;
+	// const menuX = camera.x + (canvas.width - menuWidth) / 2;
+	// const menuY = camera.y + (canvas.height - menuHeight) / 2;
 
+	const rect = canvas.getBoundingClientRect();
+	const scaleX = rect.width / canvas.width;
+	const scaleY = rect.height / canvas.height;
+
+	console.log(rect.width, canvas.width);
+	// Calculate menu position in canvas space, centered
+	const preMenuX = (canvas.width - menuWidth) / 2;
+	const preMenuY = (canvas.height - menuHeight) / 2;
+	const menuX = preMenuX * scaleX;
+	const menuY = preMenuY * scaleY;
 	// Draw menu background
 	c.fillStyle = "rgba(0, 0, 0, 0.75)";
 	c.fillRect(menuX, menuY, menuWidth, menuHeight);
@@ -717,22 +736,14 @@ function renderGameOverMenu() {
 	canvas.addEventListener("click", function onClick(e) {
 		// console.log(e);
 		const rect = canvas.getBoundingClientRect();
-		const scaleX = canvas.width / rect.width; // Scale factor in the X direction
-		const scaleY = canvas.height / rect.height; // Scale factor in the Y direction
+		const scaleX = canvas.width / rect.width;
+		const scaleY = canvas.height / rect.height;
 
 		// Calculate mouse position relative to the canvas, adjusted by the camera and scale
 		const mouseX = (e.clientX - rect.left) * scaleX;
 		const mouseY = (e.clientY - rect.top) * scaleY;
 		console.log("MouseX:", mouseX, "MouseY:", mouseY); // Debugging mouse position
 		console.log("RetryButtonX:", retryButton.x, "RetryButtonY:", retryButton.y); // Debugging button position
-		// console.log("rect");
-		// console.log(rect);
-
-		// console.log("mouseX");
-		// console.log(mouseX);
-
-		// console.log("mouseY");
-		// console.log(mouseY);
 
 		// Check if the Retry button is clicked
 		if (
@@ -749,20 +760,23 @@ function renderGameOverMenu() {
 
 function resetGame() {
 	console.log("click");
-	gameOver = false;
+
 	declarations();
 	init();
 	startRendering();
 }
 function drawMenuOutline(x, y, width, height) {
 	console.log("hello");
-	const tileSize = 16; // Assuming each tile is 32x32 pixels
+	const tileSize = 16;
 	const tileImage = new Image();
-	tileImage.src = "Images/player.png";
+	tileImage.src = "images/fireball-1.png";
 
 	for (let i = 0; i < width / tileSize; i++) {
 		// Top border
 		c.drawImage(tileImage, x + i * tileSize, y, tileSize, tileSize);
+		// console.log(x + i * tileSize);
+		// //height
+		// console.log(y + height - tileSize);
 		// Bottom border
 		c.drawImage(
 			tileImage,
