@@ -51,5 +51,5 @@ document.addEventListener("visibilitychange", () => {
 document.getElementById("restartButton").addEventListener("click", async () => {
 	document.getElementById("gameOverPopup").classList.add("display-none");
 	document.getElementById("gameOverPopup").classList.remove("display-flex");
-	init();
+	resetGame();
 });

@@ -2,9 +2,37 @@ const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 
 const dpr = window.devicePixelRatio || 1;
+// const aspectRatio = 16 / 9;
 
 canvas.width = 1024 * dpr * 1.1;
 canvas.height = 576 * dpr;
+
+// function resizeCanvas() {
+
+// 	let viewportWidth = window.innerWidth;
+// 	let viewportHeight = window.innerHeight;
+
+// 	let newWidth = viewportWidth;
+// 	let newHeight = viewportWidth / aspectRatio;
+
+// 	if (newHeight > viewportHeight) {
+// 		newHeight = viewportHeight;
+// 		newWidth = viewportHeight * aspectRatio;
+// 	}
+
+// 	canvas.style.width = `${newWidth}px`;
+// 	canvas.style.height = `${newHeight}px`;
+
+// 	canvas.width = newWidth * dpr;
+// 	canvas.height = newHeight * dpr;
+
+// 	const c = canvas.getContext("2d");
+// 	c.scale(dpr, dpr);
+// }
+
+// // Resize the canvas initially and on window resize
+// window.addEventListener("resize", resizeCanvas);
+// resizeCanvas();
 let gameOver = false;
 let gameWon = false;
 const OceanLayerData = { l_New_Layer_1 };
@@ -120,13 +148,13 @@ const renderStaticLayers = async (layersData) => {
 };
 // END - Tile setup
 //game over function
-// function showGameOverPopup() {
-// 	document.getElementById("gameOverPopup").classList.remove("display-none");
-// 	document.getElementById("gameOverPopup").classList.add("display-flex");
+function showGameOverPopup() {
+	document.getElementById("gameOverPopup").classList.remove("display-none");
+	document.getElementById("gameOverPopup").classList.add("display-flex");
 
-// 	gamePaused = true;
-// }
-// let gamePaused = false;
+	gameOver = true;
+}
+
 //end
 
 let player = null;
@@ -499,23 +527,13 @@ function init() {
 //setInterval(() => console.log(player.x.toFixed(2), camera.x.toFixed(2)), 400);
 //UPDATE
 function animate(backgroundCanvas) {
-	// console.log("player.x:");
-	// console.log("player.y:");
-	// console.log(player.x);
-
-	// console.log(player.y);
-
-	// console.log("camera.x:");
-	// console.log("camera.y:");
-	// console.log(camera.x);
-	// console.log(camera.y);
-
 	// Calculate delta time
+	hearts = [];
 	const currentTime = performance.now();
 	const deltaTime = !gameOver ? (currentTime - lastTime) / 1000 : 0;
 	lastTime = currentTime;
 	if (gameOver) {
-		renderGameOverMenu();
+		showGameOverPopup();
 		return;
 	}
 
@@ -681,82 +699,137 @@ const startRendering = async () => {
 
 //Creating the menus
 
-function renderGameOverMenu() {
-	if (!gameOver) return;
+// function renderGameOverMenu() {
+// 	if (!gameOver) return;
 
-	// Menu dimensions
-	const menuWidth = 300;
-	const menuHeight = 200;
+// 	// Menu dimensions
+// 	const menuWidth = 300;
+// 	const menuHeight = 200;
 
-	// Menu position relative to camera
-	// const menuX = camera.x + (canvas.width - menuWidth) / 2;
-	// const menuY = camera.y + (canvas.height - menuHeight) / 2;
+// 	const centerX = canvas.width / dpr / 2 + camera.x;
+// 	const centerY = canvas.height / dpr / 2 + camera.y;
 
-	const rect = canvas.getBoundingClientRect();
-	const scaleX = rect.width / canvas.width;
-	const scaleY = rect.height / canvas.height;
+// 	// Calculate the top-left position for the menu based on its size
+// 	const menuX = centerX - menuWidth / 2;
+// 	const menuY = centerY - menuHeight / 2;
 
-	console.log(rect.width, canvas.width);
-	// Calculate menu position in canvas space, centered
-	const preMenuX = (canvas.width - menuWidth) / 2;
-	const preMenuY = (canvas.height - menuHeight) / 2;
-	const menuX = preMenuX * scaleX;
-	const menuY = preMenuY * scaleY;
-	// Draw menu background
-	c.fillStyle = "rgba(0, 0, 0, 0.75)";
-	c.fillRect(menuX, menuY, menuWidth, menuHeight);
+// 	// Draw the menu background
+// 	c.save();
+// 	c.fillStyle = "rgba(0, 0, 0, 0.75)";
+// 	c.fillRect(menuX, menuY, menuWidth, menuHeight);
 
-	// Draw menu outline with tiles
-	drawMenuOutline(menuX, menuY, menuWidth, menuHeight);
+// 	// Text and buttons
+// 	c.fillStyle = "#FFFFFF";
+// 	c.font = "20px Pixelify Sans";
+// 	c.fillText("Game Over", menuX + 90, menuY + 40);
 
-	// Text and buttons
-	c.fillStyle = "#FFFFFF";
-	c.font = "20px Arial";
-	c.fillText("Game Over", menuX + 90, menuY + 40);
+// 	// Retry Button
+// 	c.fillStyle = "#FF0000";
+// 	const retryButton = {
+// 		x: menuX + 100,
+// 		y: menuY + 100,
+// 		width: 100,
+// 		height: 40,
+// 	};
+// 	c.fillRect(
+// 		retryButton.x,
+// 		retryButton.y,
+// 		retryButton.width,
+// 		retryButton.height,
+// 	);
 
-	// Retry Button
-	c.fillStyle = "#FF0000";
-	const retryButton = {
-		x: menuX + 100,
-		y: menuY + 100,
-		width: 100,
-		height: 40,
-	};
-	c.fillRect(
-		retryButton.x,
-		retryButton.y,
-		retryButton.width,
-		retryButton.height,
-	);
+// 	c.fillStyle = "#FFFFFF";
+// 	c.fillText("Retry", retryButton.x + 25, retryButton.y + 25);
+// 	// Draw the "Game Over" text
+// 	// c.font = "20px Arial";
+// 	// c.fillStyle = "#ffffff";
+// 	// c.textAlign = "center";
+// 	// c.fillText("Game Over", centerX, menuY + 50);
+// 	// c.fillText("Press R to Restart", centerX, menuY + 100);
+// 	c.restore();
 
-	c.fillStyle = "#FFFFFF";
-	c.fillText("Retry", retryButton.x + 25, retryButton.y + 25);
+// 	// //rework- possibly subtract the camera positions
+// 	// c.fillStyle = "rgba(0, 0, 0, 0.75)";
 
-	// Mouse interaction
-	canvas.addEventListener("click", function onClick(e) {
-		// console.log(e);
-		const rect = canvas.getBoundingClientRect();
-		const scaleX = canvas.width / rect.width;
-		const scaleY = canvas.height / rect.height;
+// 	// c.fillRect(camera.x, camera.y, 100, 100);
+// 	// const rect = canvas.getBoundingClientRect();
+// 	// const scaleX = rect.width / canvas.width;
+// 	// const scaleY = rect.height / canvas.height;
 
-		// Calculate mouse position relative to the canvas, adjusted by the camera and scale
-		const mouseX = (e.clientX - rect.left) * scaleX;
-		const mouseY = (e.clientY - rect.top) * scaleY;
-		console.log("MouseX:", mouseX, "MouseY:", mouseY); // Debugging mouse position
-		console.log("RetryButtonX:", retryButton.x, "RetryButtonY:", retryButton.y); // Debugging button position
+// 	// const canvasCenterX = rect.left + rect.width / 2;
+// 	// const canvasCenterY =
+// 	// 	rect.top + (Math.abs(rect.height / 2 - player.y) + camera.y) / 2;
 
-		// Check if the Retry button is clicked
-		if (
-			mouseX >= retryButton.x &&
-			mouseX <= retryButton.x + retryButton.width &&
-			mouseY >= retryButton.y &&
-			mouseY <= retryButton.y + retryButton.height
-		) {
-			resetGame();
-			canvas.removeEventListener("click", onClick);
-		}
-	});
-}
+// 	// const menuX = canvasCenterX;
+// 	// // - (menuWidth * scaleX) / 2;
+// 	// const menuY = canvasCenterY;
+// 	// // - (menuHeight * scaleY) / 2;
+// 	// console.log(rect);
+// 	// console.log(player);
+// 	// // Draw the menu background
+// 	// c.save(); // Save the current context state
+// 	// c.scale(1 / scaleX, 1 / scaleY); // Scale back to canvas coordinate space
+// 	// c.translate(menuX * scaleX, menuY * scaleY); // Translate to menu's top-left corner
+
+// 	// console.log("menuX");
+// 	// console.log("menuY");
+// 	// console.log(menuX);
+// 	// console.log(menuY);
+// 	// // Draw menu background
+// 	// c.fillStyle = "rgba(0, 0, 0, 0.75)";
+// 	// c.fillRect(menuX, menuY, menuWidth, menuHeight);
+
+// 	// // Draw menu outline with tiles
+// 	// drawMenuOutline(menuX, menuY, menuWidth, menuHeight);
+
+// 	// // Text and buttons
+// 	// c.fillStyle = "#FFFFFF";
+// 	// c.font = "20px Pixelify Sans";
+// 	// c.fillText("Game Over", menuX + 90, menuY + 40);
+
+// 	// // Retry Button
+// 	// c.fillStyle = "#FF0000";
+// 	// const retryButton = {
+// 	// 	x: menuX + 100,
+// 	// 	y: menuY + 100,
+// 	// 	width: 100,
+// 	// 	height: 40,
+// 	// };
+// 	// c.fillRect(
+// 	// 	retryButton.x,
+// 	// 	retryButton.y,
+// 	// 	retryButton.width,
+// 	// 	retryButton.height,
+// 	// );
+
+// 	// c.fillStyle = "#FFFFFF";
+// 	// c.fillText("Retry", retryButton.x + 25, retryButton.y + 25);
+// 	// c.restore();
+// 	// Mouse interaction
+// 	canvas.addEventListener("click", function onClick(e) {
+// 		console.log(e);
+// 		const rect = canvas.getBoundingClientRect();
+// 		const scaleX = canvas.width / rect.width;
+// 		const scaleY = canvas.height / rect.height;
+
+// 		// Calculate mouse position relative to the canvas, adjusted by the camera and scale
+// 		const mouseX = (e.clientX - rect.left) * scaleX;
+// 		const mouseY = (e.clientY - rect.top) * scaleY;
+// 		console.log("MouseX:", mouseX, "MouseY:", mouseY); // Debugging mouse position
+// 		console.log("RetryButtonX:", retryButton.x, "RetryButtonY:", retryButton.y); // Debugging button position
+
+// 		// Check if the Retry button is clicked
+// 		if (
+// 			mouseX >= retryButton.x &&
+// 			mouseX <= retryButton.x + retryButton.width &&
+// 			mouseY >= retryButton.y &&
+// 			mouseY <= retryButton.y + retryButton.height + 40
+// 		) {
+// 			resetGame();
+// 			canvas.removeEventListener("click", onClick);
+// 		}
+// 	});
+// }
 
 function resetGame() {
 	console.log("click");
@@ -765,41 +838,40 @@ function resetGame() {
 	init();
 	startRendering();
 }
-function drawMenuOutline(x, y, width, height) {
-	console.log("hello");
-	const tileSize = 16;
-	const tileImage = new Image();
-	tileImage.src = "images/fireball-1.png";
+// function drawMenuOutline(x, y, width, height) {
+// 	const tileSize = 16;
+// 	const tileImage = new Image();
+// 	tileImage.src = "images/fireball-1.png";
 
-	for (let i = 0; i < width / tileSize; i++) {
-		// Top border
-		c.drawImage(tileImage, x + i * tileSize, y, tileSize, tileSize);
-		// console.log(x + i * tileSize);
-		// //height
-		// console.log(y + height - tileSize);
-		// Bottom border
-		c.drawImage(
-			tileImage,
-			x + i * tileSize,
-			y + height - tileSize,
-			tileSize,
-			tileSize,
-		);
-	}
+// 	for (let i = 0; i < width / tileSize; i++) {
+// 		// Top border
+// 		c.drawImage(tileImage, x + i * tileSize, y, tileSize, tileSize);
+// 		// console.log(x + i * tileSize);
+// 		// //height
+// 		// console.log(y + height - tileSize);
+// 		// Bottom border
+// 		c.drawImage(
+// 			tileImage,
+// 			x + i * tileSize,
+// 			y + height - tileSize,
+// 			tileSize,
+// 			tileSize,
+// 		);
+// 	}
 
-	for (let j = 0; j < height / tileSize; j++) {
-		// Left border
-		c.drawImage(tileImage, x, y + j * tileSize, tileSize, tileSize);
-		// Right border
-		c.drawImage(
-			tileImage,
-			x + width - tileSize,
-			y + j * tileSize,
-			tileSize,
-			tileSize,
-		);
-	}
-}
+// 	for (let j = 0; j < height / tileSize; j++) {
+// 		// Left border
+// 		c.drawImage(tileImage, x, y + j * tileSize, tileSize, tileSize);
+// 		// Right border
+// 		c.drawImage(
+// 			tileImage,
+// 			x + width - tileSize,
+// 			y + j * tileSize,
+// 			tileSize,
+// 			tileSize,
+// 		);
+// 	}
+// }
 declarations();
 init();
 startRendering();
