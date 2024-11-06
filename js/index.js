@@ -6,7 +6,7 @@ const dpr = window.devicePixelRatio || 1;
 
 canvas.width = 1024 * dpr * 1.1;
 canvas.height = 576 * dpr;
-
+let gameStarted = false;
 // function resizeCanvas() {
 
 // 	let viewportWidth = window.innerWidth;
@@ -153,7 +153,7 @@ let opossums = [];
 let friendlies = [];
 let sprites = [];
 let hearts = [];
-
+let gameState = "";
 // new Sprite({
 // 	x: 700,
 // 	y: 100,
@@ -493,11 +493,16 @@ function animate(backgroundCanvas) {
 	livesLost = heartsDepleted;
 	gemsCollected = gemCounter;
 	opossumsScared = opossumInitial - opossums.length;
-	console.log(livesLost, opossumsScared, gemsCollected);
+
 	// Calculate delta time
 	const currentTime = performance.now();
 	const deltaTime = !gameOver ? (currentTime - lastTime) / 1000 : 0;
 	lastTime = currentTime;
+	if (!gameStarted) {
+		document.getElementById("gameStartPopup").classList.remove("display-none");
+		document.getElementById("gameStartPopup").classList.add("display-flex");
+		return;
+	}
 	if (gameOver) {
 		showGameOverPopup();
 		return;
@@ -675,12 +680,14 @@ const startRendering = async () => {
 function showGameOverPopup() {
 	document.getElementById("gameOverPopup").classList.remove("display-none");
 	document.getElementById("gameOverPopup").classList.add("display-flex");
+	addRestartButtonListener();
 }
 //game won function
 function showGameWonPopup() {
 	updateGameWonPopup();
 	document.getElementById("gameWonPopup").classList.remove("display-none");
 	document.getElementById("gameWonPopup").classList.add("display-flex");
+	addRestartButtonListener();
 }
 function updateGameWonPopup() {
 	document.getElementById("livesLost").textContent = "Lives lost: " + livesLost;
@@ -690,16 +697,14 @@ function updateGameWonPopup() {
 		"Opossums scared away: " + opossumsScared;
 }
 function resetGame() {
-	console.log("click");
-
 	declarations();
-	init();
 	startRendering();
+	init();
 }
 
 declarations();
-init();
 startRendering();
+init();
 
 //Redesign menu
 //Add win condition

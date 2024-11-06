@@ -48,8 +48,30 @@ document.addEventListener("visibilitychange", () => {
 	}
 });
 
-document.getElementById("restartButton").addEventListener("click", async () => {
-	document.getElementById("gameOverPopup").classList.add("display-none");
-	document.getElementById("gameOverPopup").classList.remove("display-flex");
+function addRestartButtonListener() {
+	const activePopup = document.querySelector(".display-flex.popup");
+	if (activePopup) {
+		const restartButton = activePopup.querySelector(".restartButton");
+
+		const handleRestartClick = () => {
+			resetGame();
+
+			activePopup.classList.add("display-none");
+			activePopup.classList.remove("display-flex");
+
+			restartButton.removeEventListener("click", handleRestartClick);
+		};
+
+		if (restartButton) {
+			restartButton.addEventListener("click", handleRestartClick);
+		}
+	}
+}
+
+document.getElementById("startButton").addEventListener("click", () => {
+	gameStarted = true;
 	resetGame();
+	const gameStartPopup = document.getElementById("gameStartPopup");
+	gameStartPopup.classList.remove("display-flex");
+	gameStartPopup.classList.add("display-none");
 });

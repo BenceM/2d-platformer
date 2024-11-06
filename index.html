@@ -78,6 +78,10 @@
 				font-size: 8rem;
 				flex-shrink: 0;
 			}
+			.popup h2 {
+				font-size: 4rem;
+				flex-shrink: 0;
+			}
 			.popup button {
 				padding: 1rem;
 				background-color: #e39e5a;
@@ -90,7 +94,7 @@
 		<div id="gameOverPopup" class="display-none popup">
 			<div class="display-flex popup-menu">
 				<h1>Game Over</h1>
-				<button id="restartButton">Restart</button>
+				<button class="restartButton">Restart</button>
 			</div>
 		</div>
 		<div id="gameWonPopup" class="display-none popup">
@@ -99,13 +103,14 @@
 				<p id="livesLost">Lives lost:</p>
 				<p id="gemsCollected">Gems collected:</p>
 				<p id="opossumsScared">Opossums scared away:</p>
-				<button id="restartButton">Play Again</button>
+				<button class="restartButton">Play Again</button>
 			</div>
 		</div>
 		<div id="gameStartPopup" class="display-none popup">
 			<div class="display-flex popup-menu">
-				<h1>Welcome to Bence's Game</h1>
-				<button id="restartButton">Start</button>
+				<h1>Welcome to</h1>
+				<h2>Bence's game</h2>
+				<button id="startButton">Start</button>
 			</div>
 		</div>
 
