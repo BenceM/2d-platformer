@@ -33,8 +33,7 @@ canvas.height = 576 * dpr;
 // // Resize the canvas initially and on window resize
 // window.addEventListener("resize", resizeCanvas);
 // resizeCanvas();
-let gameOver = false;
-let gameWon = false;
+
 const OceanLayerData = { l_New_Layer_1 };
 const MountainLayerData = { l_New_Layer_2 };
 const layersData = {
@@ -147,15 +146,6 @@ const renderStaticLayers = async (layersData) => {
 	return offscreenCanvas;
 };
 // END - Tile setup
-//game over function
-function showGameOverPopup() {
-	document.getElementById("gameOverPopup").classList.remove("display-none");
-	document.getElementById("gameOverPopup").classList.add("display-flex");
-
-	gameOver = true;
-}
-
-//end
 
 let player = null;
 
@@ -204,8 +194,21 @@ let mountainBackgroundCanvas = null;
 let rewards = [];
 let gemCounter = 0;
 let rewardUI = null;
+let livesLost = 0;
+let gemsCollected = 0;
+let opossumsScared = 0;
+let opossumInitial = 0;
+let heartsDepleted = 0;
+let gameOver = false;
+let gameWon = false;
 
 function declarations() {
+	livesLost = 0;
+	gemsCollected = 0;
+	opossumsScared = 0;
+	opossumInitial = 0;
+	heartsDepleted = 0;
+	gameWon = false;
 	player = new Player({
 		x: 100,
 		y: 100,
@@ -246,50 +249,7 @@ function declarations() {
 		}),
 	];
 	sprites = [];
-	hearts = [
-		new Heart({
-			x: 10,
-			y: 10,
-			width: 21,
-			height: 18,
-			imgSrc: "hearts.png",
-			spriteAnimation: {
-				x: 0,
-				y: 0,
-				width: 21,
-				height: 18,
-				frames: 4,
-			},
-		}),
-		new Heart({
-			x: 33,
-			y: 10,
-			width: 21,
-			height: 18,
-			imgSrc: "hearts.png",
-			spriteAnimation: {
-				x: 0,
-				y: 0,
-				width: 21,
-				height: 18,
-				frames: 4,
-			},
-		}),
-		new Heart({
-			x: 56,
-			y: 10,
-			width: 21,
-			height: 18,
-			imgSrc: "hearts.png",
-			spriteAnimation: {
-				x: 0,
-				y: 0,
-				width: 21,
-				height: 18,
-				frames: 4,
-			},
-		}),
-	];
+	hearts = [];
 
 	// new Sprite({
 	// 	x: 700,
@@ -341,6 +301,7 @@ function init() {
 						width: 15,
 						height: 13,
 						imgSrc: "gem.png",
+						type: symbol,
 						spriteAnimation: {
 							x: 0,
 							y: 0,
@@ -365,6 +326,7 @@ function init() {
 						width: 17,
 						height: 14,
 						imgSrc: "acorn.png",
+						type: symbol,
 						spriteAnimation: {
 							x: 0,
 							y: 0,
@@ -474,7 +436,7 @@ function init() {
 		}),
 		//end
 	];
-
+	opossumInitial = opossums.length;
 	sprites = [];
 	hearts = [
 		new Heart({
@@ -521,14 +483,18 @@ function init() {
 		}),
 	];
 	gameOver = false;
+	heartsDepleted = 0;
 }
 //helper for position checking
 //setInterval(() => console.log(player.y, camera.y), 400);
 //setInterval(() => console.log(player.x.toFixed(2), camera.x.toFixed(2)), 400);
 //UPDATE
 function animate(backgroundCanvas) {
+	livesLost = heartsDepleted;
+	gemsCollected = gemCounter;
+	opossumsScared = opossumInitial - opossums.length;
+	console.log(livesLost, opossumsScared, gemsCollected);
 	// Calculate delta time
-	hearts = [];
 	const currentTime = performance.now();
 	const deltaTime = !gameOver ? (currentTime - lastTime) / 1000 : 0;
 	lastTime = currentTime;
@@ -536,7 +502,10 @@ function animate(backgroundCanvas) {
 		showGameOverPopup();
 		return;
 	}
-
+	if (gameWon) {
+		showGameWonPopup();
+		return;
+	}
 	player.handleInput(keys);
 	player.update(deltaTime, collisionBlocks);
 
@@ -564,6 +533,9 @@ function animate(backgroundCanvas) {
 	rewards.forEach((reward, i) => {
 		if (checkCollisions(player, reward)) {
 			// item feedback animation
+			if (reward.type === 19) {
+				gameWon = true;
+			}
 			gemCounter++;
 			sprites.push(
 				new Sprite({
@@ -624,6 +596,7 @@ function animate(backgroundCanvas) {
 				player.takeDamage();
 				if (!player.isInvincible && fullHearts.length > 0) {
 					fullHearts.at(-1).depleted = true;
+					heartsDepleted++;
 					player.setIsInvincible();
 				} else if (fullHearts.length === 0) {
 					// showGameOverPopup();
@@ -697,140 +670,25 @@ const startRendering = async () => {
 	}
 };
 
-//Creating the menus
-
-// function renderGameOverMenu() {
-// 	if (!gameOver) return;
-
-// 	// Menu dimensions
-// 	const menuWidth = 300;
-// 	const menuHeight = 200;
-
-// 	const centerX = canvas.width / dpr / 2 + camera.x;
-// 	const centerY = canvas.height / dpr / 2 + camera.y;
-
-// 	// Calculate the top-left position for the menu based on its size
-// 	const menuX = centerX - menuWidth / 2;
-// 	const menuY = centerY - menuHeight / 2;
-
-// 	// Draw the menu background
-// 	c.save();
-// 	c.fillStyle = "rgba(0, 0, 0, 0.75)";
-// 	c.fillRect(menuX, menuY, menuWidth, menuHeight);
-
-// 	// Text and buttons
-// 	c.fillStyle = "#FFFFFF";
-// 	c.font = "20px Pixelify Sans";
-// 	c.fillText("Game Over", menuX + 90, menuY + 40);
-
-// 	// Retry Button
-// 	c.fillStyle = "#FF0000";
-// 	const retryButton = {
-// 		x: menuX + 100,
-// 		y: menuY + 100,
-// 		width: 100,
-// 		height: 40,
-// 	};
-// 	c.fillRect(
-// 		retryButton.x,
-// 		retryButton.y,
-// 		retryButton.width,
-// 		retryButton.height,
-// 	);
-
-// 	c.fillStyle = "#FFFFFF";
-// 	c.fillText("Retry", retryButton.x + 25, retryButton.y + 25);
-// 	// Draw the "Game Over" text
-// 	// c.font = "20px Arial";
-// 	// c.fillStyle = "#ffffff";
-// 	// c.textAlign = "center";
-// 	// c.fillText("Game Over", centerX, menuY + 50);
-// 	// c.fillText("Press R to Restart", centerX, menuY + 100);
-// 	c.restore();
-
-// 	// //rework- possibly subtract the camera positions
-// 	// c.fillStyle = "rgba(0, 0, 0, 0.75)";
-
-// 	// c.fillRect(camera.x, camera.y, 100, 100);
-// 	// const rect = canvas.getBoundingClientRect();
-// 	// const scaleX = rect.width / canvas.width;
-// 	// const scaleY = rect.height / canvas.height;
-
-// 	// const canvasCenterX = rect.left + rect.width / 2;
-// 	// const canvasCenterY =
-// 	// 	rect.top + (Math.abs(rect.height / 2 - player.y) + camera.y) / 2;
-
-// 	// const menuX = canvasCenterX;
-// 	// // - (menuWidth * scaleX) / 2;
-// 	// const menuY = canvasCenterY;
-// 	// // - (menuHeight * scaleY) / 2;
-// 	// console.log(rect);
-// 	// console.log(player);
-// 	// // Draw the menu background
-// 	// c.save(); // Save the current context state
-// 	// c.scale(1 / scaleX, 1 / scaleY); // Scale back to canvas coordinate space
-// 	// c.translate(menuX * scaleX, menuY * scaleY); // Translate to menu's top-left corner
-
-// 	// console.log("menuX");
-// 	// console.log("menuY");
-// 	// console.log(menuX);
-// 	// console.log(menuY);
-// 	// // Draw menu background
-// 	// c.fillStyle = "rgba(0, 0, 0, 0.75)";
-// 	// c.fillRect(menuX, menuY, menuWidth, menuHeight);
-
-// 	// // Draw menu outline with tiles
-// 	// drawMenuOutline(menuX, menuY, menuWidth, menuHeight);
-
-// 	// // Text and buttons
-// 	// c.fillStyle = "#FFFFFF";
-// 	// c.font = "20px Pixelify Sans";
-// 	// c.fillText("Game Over", menuX + 90, menuY + 40);
-
-// 	// // Retry Button
-// 	// c.fillStyle = "#FF0000";
-// 	// const retryButton = {
-// 	// 	x: menuX + 100,
-// 	// 	y: menuY + 100,
-// 	// 	width: 100,
-// 	// 	height: 40,
-// 	// };
-// 	// c.fillRect(
-// 	// 	retryButton.x,
-// 	// 	retryButton.y,
-// 	// 	retryButton.width,
-// 	// 	retryButton.height,
-// 	// );
-
-// 	// c.fillStyle = "#FFFFFF";
-// 	// c.fillText("Retry", retryButton.x + 25, retryButton.y + 25);
-// 	// c.restore();
-// 	// Mouse interaction
-// 	canvas.addEventListener("click", function onClick(e) {
-// 		console.log(e);
-// 		const rect = canvas.getBoundingClientRect();
-// 		const scaleX = canvas.width / rect.width;
-// 		const scaleY = canvas.height / rect.height;
-
-// 		// Calculate mouse position relative to the canvas, adjusted by the camera and scale
-// 		const mouseX = (e.clientX - rect.left) * scaleX;
-// 		const mouseY = (e.clientY - rect.top) * scaleY;
-// 		console.log("MouseX:", mouseX, "MouseY:", mouseY); // Debugging mouse position
-// 		console.log("RetryButtonX:", retryButton.x, "RetryButtonY:", retryButton.y); // Debugging button position
-
-// 		// Check if the Retry button is clicked
-// 		if (
-// 			mouseX >= retryButton.x &&
-// 			mouseX <= retryButton.x + retryButton.width &&
-// 			mouseY >= retryButton.y &&
-// 			mouseY <= retryButton.y + retryButton.height + 40
-// 		) {
-// 			resetGame();
-// 			canvas.removeEventListener("click", onClick);
-// 		}
-// 	});
-// }
-
+// ingame menu deleted, it requires a full redesign
+//game over function
+function showGameOverPopup() {
+	document.getElementById("gameOverPopup").classList.remove("display-none");
+	document.getElementById("gameOverPopup").classList.add("display-flex");
+}
+//game won function
+function showGameWonPopup() {
+	updateGameWonPopup();
+	document.getElementById("gameWonPopup").classList.remove("display-none");
+	document.getElementById("gameWonPopup").classList.add("display-flex");
+}
+function updateGameWonPopup() {
+	document.getElementById("livesLost").textContent = "Lives lost: " + livesLost;
+	document.getElementById("gemsCollected").textContent =
+		"Gems collected: " + gemsCollected;
+	document.getElementById("opossumsScared").textContent =
+		"Opossums scared away: " + opossumsScared;
+}
 function resetGame() {
 	console.log("click");
 
@@ -838,40 +696,7 @@ function resetGame() {
 	init();
 	startRendering();
 }
-// function drawMenuOutline(x, y, width, height) {
-// 	const tileSize = 16;
-// 	const tileImage = new Image();
-// 	tileImage.src = "images/fireball-1.png";
 
-// 	for (let i = 0; i < width / tileSize; i++) {
-// 		// Top border
-// 		c.drawImage(tileImage, x + i * tileSize, y, tileSize, tileSize);
-// 		// console.log(x + i * tileSize);
-// 		// //height
-// 		// console.log(y + height - tileSize);
-// 		// Bottom border
-// 		c.drawImage(
-// 			tileImage,
-// 			x + i * tileSize,
-// 			y + height - tileSize,
-// 			tileSize,
-// 			tileSize,
-// 		);
-// 	}
-
-// 	for (let j = 0; j < height / tileSize; j++) {
-// 		// Left border
-// 		c.drawImage(tileImage, x, y + j * tileSize, tileSize, tileSize);
-// 		// Right border
-// 		c.drawImage(
-// 			tileImage,
-// 			x + width - tileSize,
-// 			y + j * tileSize,
-// 			tileSize,
-// 			tileSize,
-// 		);
-// 	}
-// }
 declarations();
 init();
 startRendering();

@@ -5,6 +5,7 @@ class Sprite {
 		width,
 		height,
 		imgSrc,
+		type = null,
 		spriteAnimation = {
 			x: 0,
 			y: 0,
@@ -23,7 +24,7 @@ class Sprite {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-
+		this.type = type;
 		this.isImageLoaded = false;
 		this.image = new Image();
 		this.image.onload = () => {
