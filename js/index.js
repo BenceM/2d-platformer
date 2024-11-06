@@ -706,7 +706,4 @@ declarations();
 startRendering();
 init();
 
-//Redesign menu
-//Add win condition
-//Add start menu
 //Add music
