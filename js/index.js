@@ -3,9 +3,11 @@ const c = canvas.getContext("2d");
 
 const dpr = window.devicePixelRatio || 1;
 // const aspectRatio = 16 / 9;
-
-canvas.width = 1024 * dpr * 1.1;
-canvas.height = 576 * dpr;
+//2252, 1151
+canvas.width = 2252;
+// 1024 * dpr * 1.1;
+canvas.height = 1151;
+//576 * dpr;
 let gameStarted = false;
 // function resizeCanvas() {
 
