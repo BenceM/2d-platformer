@@ -15,35 +15,7 @@ canvas.height = 1151;
 const scaleX = canvas.width / window.innerWidth;
 const scaleY = canvas.height / window.innerHeight;
 
-const zoomFactor = Math.min(scaleX, scaleY);
-console.log(zoomFactor);
 let gameStarted = false;
-// function resizeCanvas() {
-
-// 	let viewportWidth = window.innerWidth;
-// 	let viewportHeight = window.innerHeight;
-
-// 	let newWidth = viewportWidth;
-// 	let newHeight = viewportWidth / aspectRatio;
-
-// 	if (newHeight > viewportHeight) {
-// 		newHeight = viewportHeight;
-// 		newWidth = viewportHeight * aspectRatio;
-// 	}
-
-// 	canvas.style.width = `${newWidth}px`;
-// 	canvas.style.height = `${newHeight}px`;
-
-// 	canvas.width = newWidth * dpr;
-// 	canvas.height = newHeight * dpr;
-
-// 	const c = canvas.getContext("2d");
-// 	c.scale(dpr, dpr);
-// }
-
-// // Resize the canvas initially and on window resize
-// window.addEventListener("resize", resizeCanvas);
-// resizeCanvas();
 
 const OceanLayerData = { l_New_Layer_1 };
 const MountainLayerData = { l_New_Layer_2 };
@@ -165,20 +137,6 @@ let friendlies = [];
 let sprites = [];
 let hearts = [];
 let gameState = "";
-// new Sprite({
-// 	x: 700,
-// 	y: 100,
-// 	width: 32,
-// 	height: 32,
-// 	imgSrc: "enemy-death.png",
-// 	spriteAnimation: {
-// 		x: 0,
-// 		y: 0,
-// 		width: 28,
-// 		height: 26,
-// 		frames: 4,
-// 	},
-// }),
 
 const keys = {
 	w: {
@@ -261,21 +219,6 @@ function declarations() {
 	];
 	sprites = [];
 	hearts = [];
-
-	// new Sprite({
-	// 	x: 700,
-	// 	y: 100,
-	// 	width: 32,
-	// 	height: 32,
-	// 	imgSrc: "enemy-death.png",
-	// 	spriteAnimation: {
-	// 		x: 0,
-	// 		y: 0,
-	// 		width: 28,
-	// 		height: 26,
-	// 		frames: 4,
-	// 	},
-	// }),
 
 	lastTime = performance.now();
 	camera = { x: 0, y: 0 };
@@ -365,7 +308,7 @@ function init() {
 		size: 32,
 		velocity: { x: 0, y: 0 },
 	});
-	//make possum into an array for collision detection
+
 	opossums = [
 		new Opossum({
 			x: 490,
@@ -573,15 +516,8 @@ function animate(backgroundCanvas) {
 			rewards.splice(i, 1);
 		}
 	});
-	// for (let i = rewards.length - 1; i >= 0; i--) {
-	// 	const collisionDirection = checkCollisions(player, rewards[i]);
-	// 	if (collisionDirection) {
-	// 		rewards.splice(i, 1);
-	// 	}
-	// }
 
 	//Jump and remove opossums
-	//console.log(checkCollisions(player, opossums));
 
 	let opossumToRemoveIndex = null;
 
@@ -636,7 +572,7 @@ function animate(backgroundCanvas) {
 		camera.y = player.y - SCROLL_POST_TOP < 0 ? 0 : player.y - SCROLL_POST_TOP;
 	} else if (
 		player.y > SCROLL_POST_BOTTOM ||
-		(player.y > SCROLL_POST_TOP && !(player.x < 896))
+		(player.y > SCROLL_POST_TOP && !(player.x < 896) && player.x < 1452)
 	) {
 		camera.y = Math.min(player.y - SCROLL_POST_BOTTOM + 100, 350);
 	}
