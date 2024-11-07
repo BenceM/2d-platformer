@@ -1,13 +1,22 @@
+// const canvas = document.querySelector("canvas");
+// const c = canvas.getContext("2d");
+
+// const dpr = window.devicePixelRatio || 1;
+// // const aspectRatio = 16 / 9;
+// //2252, 1151
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
-
 const dpr = window.devicePixelRatio || 1;
-// const aspectRatio = 16 / 9;
-//2252, 1151
+
 canvas.width = 2252;
-// 1024 * dpr * 1.1;
+// // 1024 * dpr * 1.1;
 canvas.height = 1151;
 //576 * dpr;
+const scaleX = canvas.width / window.innerWidth;
+const scaleY = canvas.height / window.innerHeight;
+
+const zoomFactor = Math.min(scaleX, scaleY);
+console.log(zoomFactor);
 let gameStarted = false;
 // function resizeCanvas() {
 
@@ -189,7 +198,7 @@ let lastTime = performance.now();
 let camera = { x: 0, y: 0 };
 
 const SCROLL_POST_RIGHT = 330;
-const SCROLL_POST_TOP = 100;
+const SCROLL_POST_TOP = 180;
 const SCROLL_POST_BOTTOM = 270;
 let oceanBackgroundCanvas = null;
 let mountainBackgroundCanvas = null;
@@ -624,14 +633,17 @@ function animate(backgroundCanvas) {
 	}
 	if (player.y < SCROLL_POST_TOP) {
 		//Math.min(player.y - SCROLL_POST_TOP, -1)
-		camera.y = Math.max(player.y - SCROLL_POST_TOP, 0);
-	} else if (player.y > SCROLL_POST_BOTTOM) {
-		camera.y = Math.min(player.y - SCROLL_POST_BOTTOM, 250);
+		camera.y = player.y - SCROLL_POST_TOP < 0 ? 0 : player.y - SCROLL_POST_TOP;
+	} else if (
+		player.y > SCROLL_POST_BOTTOM ||
+		(player.y > SCROLL_POST_TOP && !(player.x < 896))
+	) {
+		camera.y = Math.min(player.y - SCROLL_POST_BOTTOM + 100, 350);
 	}
 
 	// Render scene
 	c.save();
-	c.scale(dpr + 0.8, dpr + 0.8);
+	c.scale(dpr * 2, dpr * 2);
 	c.translate(-camera.x, -camera.y);
 	c.clearRect(0, 0, canvas.width, canvas.height);
 	c.drawImage(oceanBackgroundCanvas, camera.x * 0.32, 0);
@@ -649,7 +661,7 @@ function animate(backgroundCanvas) {
 
 	c.restore();
 	c.save();
-	c.scale(dpr + 0.8, dpr + 0.8);
+	c.scale(dpr * 1.5, dpr * 1.5);
 	hearts.toReversed().map((heart) => heart.draw(c));
 	rewardUI.draw(c);
 	c.font = "600 18px Arial";
